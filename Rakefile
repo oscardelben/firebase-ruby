@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "firebase"
   gem.homepage = "http://github.com/oscardelben/firebase"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Firebase wrapper for Ruby}
+  gem.description = %Q{Firebase wrapper for Ruby}
   gem.email = "info@oscardelben.com"
   gem.authors = ["Oscar Del Ben"]
   # dependencies defined in Gemfile
