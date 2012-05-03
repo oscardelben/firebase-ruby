@@ -5,9 +5,17 @@ Ruby wrapper for the Firebase backend API.
 Changes are sent to all subscribed clients automatically, so you can
 update your clients **in realtime from the backend**.
 
+See a [video demo](https://vimeo.com/41494336?utm_source=internal&utm_medium=email&utm_content=cliptranscoded&utm_campaign=adminclip) of what's possible.
+
+### Installation
+
+
 ```
 gem install firebase
 ```
+
+### Usage
+
 
 ```ruby
 Firebase.base_uri = 'http://gamma.firebase.com/youruser'
@@ -31,7 +39,7 @@ Firebase.delete(path)
 More features are coming soon.
 
 More information about Firebase and the Firebase API is available at the
-[official website](http://www.firebase.com/)
+[official website](http://www.firebase.com/).
 
 ### Copyright
 
