@@ -25,7 +25,7 @@ module Firebase
     # Writes the data, returns the key name of the data added
     #   Firebase.push('users', { 'age' => 18}) => {"name":"-INOQPH-aV_psbk3ZXEX"}
     def push(path, data)
-      Firebase::Request.push(path, data)
+      Firebase::Request.post(path, data)
     end
 
     # Deletes the data at path and returs true
