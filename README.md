@@ -12,7 +12,7 @@ gem install firebase
 ```ruby
 Firebase.base_uri = 'http://gamma.firebase.com/youruser'
 
-response = Firebase.push("todos", { :name => 'Pick the milk', :priority => 1)
+response = Firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
 response.success? # => true
 response.code # => 200
 response.body # => { 'name' => "-INOQPH-aV_psbk3ZXEX" }
