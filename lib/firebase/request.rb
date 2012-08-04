@@ -28,6 +28,7 @@ module Firebase
         raise "Please set Firebase.base_uri before making requests" unless Firebase.base_uri
 
         url = URI.join(Firebase.base_uri, path)
+        url = [url, '.json'].compact.join
 
         request = Typhoeus::Request.new(url.to_s,
                                         :body => options[:body],
