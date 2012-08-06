@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "firebase"
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Oscar Del Ben"]
-  s.date = "2012-05-03"
+  s.date = "2012-08-06"
   s.description = "Firebase wrapper for Ruby"
   s.email = "info@oscardelben.com"
   s.extra_rdoc_files = [
@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION",
+    "firebase.gemspec",
     "lib/firebase.rb",
     "lib/firebase/request.rb",
     "spec/firebase_spec.rb",
@@ -33,7 +34,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/oscardelben/firebase-ruby"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.21"
+  s.rubygems_version = "1.8.23"
   s.summary = "Firebase wrapper for Ruby"
 
   if s.respond_to? :specification_version then
