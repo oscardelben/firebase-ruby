@@ -1,5 +1,6 @@
 require 'typhoeus'
 require 'json'
+require 'uri'
 
 module Firebase
   class Request
@@ -22,17 +23,21 @@ module Firebase
         process(:delete, path)
       end
 
-      private
-
-      def process(method, path, options={})
-        raise "Please set Firebase.base_uri before making requests" unless Firebase.base_uri
-
+      def build_url(path)
         host = Firebase.base_uri
         path = "#{path}.json"
         query_string = Firebase.key ? "?key=#{Firebase.key}" : ""
         url = URI.join(Firebase.base_uri, path, query_string)
 
-        request = Typhoeus::Request.new(url.to_s,
+        url.to_s
+      end
+
+      private
+
+      def process(method, path, options={})
+        raise "Please set Firebase.base_uri before making requests" unless Firebase.base_uri
+
+        request = Typhoeus::Request.new(build_url(path),
                                         :body => options[:body],
                                         :method => method)
         hydra = Typhoeus::Hydra.new
