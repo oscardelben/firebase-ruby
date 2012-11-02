@@ -27,8 +27,10 @@ module Firebase
       def process(method, path, options={})
         raise "Please set Firebase.base_uri before making requests" unless Firebase.base_uri
 
-        url = URI.join(Firebase.base_uri, path)
-        url = [url, '.json'].compact.join
+        host = Firebase.base_uri
+        path = "#{path}.json"
+        query_string = Firebase.key ? "?key=#{Firebase.key}" : ""
+        url = URI.join(Firebase.base_uri, path, query_string)
 
         request = Typhoeus::Request.new(url.to_s,
                                         :body => options[:body],
