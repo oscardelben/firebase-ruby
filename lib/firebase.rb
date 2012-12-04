@@ -4,11 +4,15 @@ module Firebase
   autoload :Request, 'firebase/request'
 
   class << self
-    attr_accessor :base_uri
+    attr_accessor :base_uri, :auth
 
     def base_uri=(other)
       other = other + "/" if other[-1] != "/"
       @base_uri = other
+    end
+
+    def auth=(auth)
+      @auth = auth
     end
 
     # Writes and returns the data

@@ -27,6 +27,15 @@ response.body # => { 'name' => "-INOQPH-aV_psbk3ZXEX" }
 response.raw_body # => '{"name":"-INOQPH-aV_psbk3ZXEX"}'
 ```
 
+If you have a read-only namespace, set your secret key as follows:
+```ruby
+Firebase.base_uri = 'http://gamma.firebase.com/youruser'
+Firebase.auth = 'yoursecretkey'
+
+response = Firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
+```
+
+
 So far, supported methods are:
 
 ```ruby
