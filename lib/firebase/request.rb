@@ -26,7 +26,7 @@ module Firebase
       def build_url(path)
         host = Firebase.base_uri
         path = "#{path}.json"
-        query_string = Firebase.key ? "?key=#{Firebase.key}" : ""
+        query_string = Firebase.auth ? "?auth=#{Firebase.auth}" : ""
         url = URI.join(Firebase.base_uri, path, query_string)
 
         url.to_s

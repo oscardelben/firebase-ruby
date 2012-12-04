@@ -18,11 +18,11 @@ describe "Firebase Request" do
   end
 
   describe "url_builder" do
-    it "should include a key in the query string, if configured" do
+    it "should include a auth in the query string, if configured" do
       Firebase.base_uri = 'https://test.firebaseio.com'
-      Firebase.key = 'secretkey'
+      Firebase.auth = 'secretkey'
 
-      Firebase::Request.build_url('users/eugene').should == 'https://test.firebaseio.com/users/eugene.json?key=secretkey'
+      Firebase::Request.build_url('users/eugene').should == 'https://test.firebaseio.com/users/eugene.json?auth=secretkey'
     end
   end
 end
