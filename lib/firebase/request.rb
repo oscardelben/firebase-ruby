@@ -1,5 +1,6 @@
 require 'typhoeus'
 require 'json'
+require 'open-uri'
 
 module Firebase
   class Request
