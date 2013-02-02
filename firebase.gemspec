@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
     "firebase.gemspec",
     "lib/firebase.rb",
     "lib/firebase/request.rb",
+    "spec/firebase_request_spec.rb",
     "spec/firebase_spec.rb",
     "spec/spec_helper.rb"
   ]
