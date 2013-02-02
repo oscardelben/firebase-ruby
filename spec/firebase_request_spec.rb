@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe "Firebase Request" do
 
+  after do
+    Firebase.base_uri = nil
+  end
+
   describe "url_builder" do
     it "should build the correct url when passed no path" do
       Firebase.base_uri = 'https://test.firebaseio.com'

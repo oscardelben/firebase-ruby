@@ -7,7 +7,9 @@ module Firebase
     attr_accessor :base_uri, :auth
 
     def base_uri=(other)
-      other = other + "/" if other[-1] != "/"
+      if other # Guard from nil
+        other = other + "/" if other[-1] != "/"
+      end
       @base_uri = other
     end
 
