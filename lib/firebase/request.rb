@@ -24,6 +24,10 @@ module Firebase
         process(:delete, path)
       end
 
+      def patch(path, value)
+        process(:patch, path, :body => value.to_json)
+      end
+
       def build_url(path)
         host = Firebase.base_uri
         path = "#{path}.json"
