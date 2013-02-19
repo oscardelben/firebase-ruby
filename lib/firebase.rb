@@ -38,5 +38,12 @@ module Firebase
     def delete(path)
       Firebase::Request.delete(path)
     end
+
+    # Write the data at path but does not delete ommited children. Returns the data
+    #   Firebase.update('users/info', { 'name' => 'Oscar' }) => { 'name' => 'Oscar' }
+    def update(path, data)
+      Firebase::Request.patch(path, data)
+    end
+
   end
 end

@@ -39,4 +39,11 @@ describe "Firebase" do
       Firebase.delete('users/info')
     end
   end
+
+  describe "update" do
+    it "updates and returns the data" do
+      Firebase::Request.should_receive(:patch).with('users/info', data)
+      Firebase.update('users/info', data)
+    end
+  end
 end
