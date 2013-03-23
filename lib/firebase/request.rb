@@ -42,12 +42,12 @@ module Firebase
       def process(method, path, options={})
         raise "Please set Firebase.base_uri before making requests" unless Firebase.base_uri
 
+	@@hydra ||= Typhoeus::Hydra.new
         request = Typhoeus::Request.new(build_url(path),
                                         :body => options[:body],
                                         :method => method)
-        hydra = Typhoeus::Hydra.new
-        hydra.queue(request)
-        hydra.run
+        @@hydra.queue(request)
+        @@hydra.run
 
         new request.response
       end
