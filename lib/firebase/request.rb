@@ -42,7 +42,7 @@ module Firebase
       def process(method, path, options={})
         raise "Please set Firebase.base_uri before making requests" unless Firebase.base_uri
 
-	@@hydra ||= Typhoeus::Hydra.new
+	      @@hydra ||= Typhoeus::Hydra.new
         request = Typhoeus::Request.new(build_url(path),
                                         :body => options[:body],
                                         :method => method)
@@ -62,6 +62,8 @@ module Firebase
 
     def body
       JSON.parse(response.body)
+    rescue JSON::ParserError => e
+      response.body == 'null' ? nil : raise
     end
 
     def raw_body

@@ -24,6 +24,19 @@ describe "Firebase" do
       Firebase::Request.should_receive(:get).with('users/info')
       Firebase.get('users/info')
     end
+
+    it "return nil if response body contains 'null'" do
+      mock_response = mock(:body => 'null')
+      @request = Firebase::Request.new(mock_response)
+      expect { @request.body }.to_not raise_error(JSON::ParserError)
+    end
+
+    it "raises JSON::ParserError if response body contains invalid JSON" do
+      mock_response = mock(:body => '{"this is wrong"')
+      @request = Firebase::Request.new(mock_response)
+      expect { @request.body }.to raise_error(JSON::ParserError)
+    end
+
   end
 
   describe "push" do
