@@ -31,6 +31,18 @@ describe "Firebase" do
       expect { @request.body }.to_not raise_error(JSON::ParserError)
     end
 
+    it "return true if response body contains 'true'" do
+      mock_response = mock(:body => 'true')
+      @request = Firebase::Request.new(mock_response)
+      @request.body.should eq(true)
+    end
+
+    it "return false if response body contains 'false'" do
+      mock_response = mock(:body => 'false')
+      @request = Firebase::Request.new(mock_response)
+      @request.body.should eq(false)
+    end
+
     it "raises JSON::ParserError if response body contains invalid JSON" do
       mock_response = mock(:body => '{"this is wrong"')
       @request = Firebase::Request.new(mock_response)
