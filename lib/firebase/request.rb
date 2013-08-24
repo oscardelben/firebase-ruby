@@ -71,7 +71,7 @@ module Firebase
     end
 
     def success?
-      response.code.in? [200, 204]
+      [200, 204].include? response.code
     end
 
     def code
