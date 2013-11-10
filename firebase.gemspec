@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "firebase"
-  s.version = "0.1.4"
+  s.version = "0.1.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Oscar Del Ben"]
-  s.date = "2013-03-24"
+  s.date = "2013-11-10"
   s.description = "Firebase wrapper for Ruby"
   s.email = "info@oscardelben.com"
   s.extra_rdoc_files = [
