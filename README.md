@@ -43,6 +43,7 @@ Firebase.set(path, data)
 Firebase.get(path)
 Firebase.push(path, data)
 Firebase.delete(path)
+Firebase.update(path, data)
 ```
 
 More features are coming soon.
