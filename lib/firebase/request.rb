@@ -3,10 +3,26 @@ require 'json'
 require 'open-uri'
 require 'uri'
 
-module Firebase
+class Firebase
   class Request
 
     class << self
+
+      def set_uri(uri)
+        @uri = uri
+      end
+
+      def reset_uri
+        @uri = nil
+      end
+
+      def set_auth(auth)
+        @auth = auth
+      end
+
+      def reset_auth
+        @auth = nil
+      end
 
       def get(path)
         process(:get, path)
@@ -29,10 +45,12 @@ module Firebase
       end
 
       def build_url(path)
-        host = Firebase.base_uri
+        host = @uri || Firebase.base_uri
         path = "#{path}.json"
-        query_string = Firebase.auth ? "?auth=#{Firebase.auth}" : ""
-        url = URI.join(Firebase.base_uri, path, query_string)
+        query_string = @auth || Firebase.auth ? "?auth=#{@auth || Firebase.auth}" : ""
+        url = URI.join(host, path, query_string)
+        reset_uri
+        reset_auth
 
         url.to_s
       end
@@ -40,7 +58,7 @@ module Firebase
       private
 
       def process(method, path, options={})
-        raise "Please set Firebase.base_uri before making requests" unless Firebase.base_uri
+        raise "Please set Firebase.base_uri before making requests" unless Firebase.base_uri || @uri
 
 	      @@hydra ||= Typhoeus::Hydra.new
         request = Typhoeus::Request.new(build_url(path),
