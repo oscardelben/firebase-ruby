@@ -49,7 +49,6 @@ class Firebase
 
   end
 
-  
   attr_accessor :auth
   attr_reader :base_uri
 
@@ -60,7 +59,7 @@ class Firebase
 
   def base_uri=(str)
     @base_uri = Firebase.format_uri(str)
-  end  
+  end
 
   def set_base_uri
     Firebase::Request.set_uri(@base_uri)
@@ -91,10 +90,12 @@ class Firebase
   end
 
   def delete(path)
+    set_request
     Firebase.delete(path)
   end
 
   def update(path, data)
+    set_request
     Firebase.update(path, data)
   end
 
