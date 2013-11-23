@@ -2,73 +2,71 @@ require 'spec_helper'
 
 describe "Firebase" do
 
-  it 'should have a base_uri attribute' do
-    Firebase.base_uri.should be_nil
-    Firebase.base_uri = 'http://example.com/foo'
-    Firebase.base_uri.should == 'http://example.com/foo/'
-  end
-
   let (:data) do
     { 'name' => 'Oscar' }
   end
 
+  before do
+    @firebase = Firebase.new('https://test.firebaseio.com')
+    @req = @firebase.request
+  end
+
   describe "set" do
     it "writes and returns the data" do
-      Firebase::Request.should_receive(:put).with('users/info', data)
-      Firebase.set('users/info', data)
+      @req.should_receive(:put).with('users/info', data)
+      @firebase.set('users/info', data)
     end
   end
 
   describe "get" do
     it "returns the data" do
-      Firebase::Request.should_receive(:get).with('users/info')
-      Firebase.get('users/info')
+      @req.should_receive(:get).with('users/info')
+      @firebase.get('users/info')
     end
 
     it "return nil if response body contains 'null'" do
-      mock_response = mock(:body => 'null')
-      @request = Firebase::Request.new(mock_response)
-      expect { @request.body }.to_not raise_error(JSON::ParserError)
+      mock_response = double(:body => 'null')
+      response = Firebase::Response.new(mock_response)
+      expect { response.body }.to_not raise_error
     end
 
     it "return true if response body contains 'true'" do
-      mock_response = mock(:body => 'true')
-      @request = Firebase::Request.new(mock_response)
-      @request.body.should eq(true)
+      mock_response = double(:body => 'true')
+      response = Firebase::Response.new(mock_response)
+      response.body.should eq(true)
     end
 
     it "return false if response body contains 'false'" do
-      mock_response = mock(:body => 'false')
-      @request = Firebase::Request.new(mock_response)
-      @request.body.should eq(false)
+      mock_response = double(:body => 'false')
+      response = Firebase::Response.new(mock_response)
+      response.body.should eq(false)
     end
 
     it "raises JSON::ParserError if response body contains invalid JSON" do
-      mock_response = mock(:body => '{"this is wrong"')
-      @request = Firebase::Request.new(mock_response)
-      expect { @request.body }.to raise_error(JSON::ParserError)
+      mock_response = double(:body => '{"this is wrong"')
+      response = Firebase::Response.new(mock_response)
+      expect { response.body }.to raise_error
     end
-
   end
 
   describe "push" do
     it "writes the data" do
-      Firebase::Request.should_receive(:post).with('users', data)
-      Firebase.push('users', data)
+      @req.should_receive(:post).with('users', data)
+      @firebase.push('users', data)
     end
   end
 
   describe "delete" do
     it "returns true" do
-      Firebase::Request.should_receive(:delete).with('users/info')
-      Firebase.delete('users/info')
+      @req.should_receive(:delete).with('users/info')
+      @firebase.delete('users/info')
     end
   end
 
   describe "update" do
     it "updates and returns the data" do
-      Firebase::Request.should_receive(:patch).with('users/info', data)
-      Firebase.update('users/info', data)
+      @req.should_receive(:patch).with('users/info', data)
+      @firebase.update('users/info', data)
     end
   end
 end
