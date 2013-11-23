@@ -1,0 +1,3 @@
+- UNRELEASED
+
+* You can now create instances of Firebase. The old syntax still works but will likely be removed in a future version. - @wannabefro
