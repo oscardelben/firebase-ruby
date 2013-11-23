@@ -1,6 +1,7 @@
 class Firebase
 
   require 'firebase/request'
+  require 'firebase/response'
 
   class << self
 
@@ -12,7 +13,7 @@ class Firebase
 
     def base_uri=(other)
       deprecate
-      default_instance.request.uri = format_uri(other)
+      default_instance.request.base_uri = format_uri(other)
     end
 
     def auth=(auth)
@@ -22,7 +23,7 @@ class Firebase
 
     def set(path, data)
       deprecate
-      default_instance.put(path, data)
+      default_instance.set(path, data)
     end
 
     def get(path)
@@ -32,7 +33,7 @@ class Firebase
 
     def push(path, data)
       deprecate
-      default_instance.post(path, data)
+      default_instance.push(path, data)
     end
 
     def delete(path)
@@ -46,7 +47,7 @@ class Firebase
     end
 
     def default_instance
-      @default_instance ||= Firebase.new
+      @default_instance ||= Firebase.new(nil, nil)
     end
 
     def deprecate
@@ -63,7 +64,7 @@ class Firebase
   end
 
     # Writes and returns the data
-    #   Firebase.eet('users/info', { 'name' => 'Oscar' }) => { 'name' => 'Oscar' }
+    #   Firebase.set('users/info', { 'name' => 'Oscar' }) => { 'name' => 'Oscar' }
   def set(path, data)
     request.put(path, data)
   end
@@ -76,7 +77,7 @@ class Firebase
   # Writes the data, returns the key name of the data added
   #   Firebase.push('users', { 'age' => 18}) => {"name":"-INOQPH-aV_psbk3ZXEX"}
   def push(path, data)
-    request.push(path, data)
+    request.post(path, data)
   end
 
   # Deletes the data at path and returs true
@@ -87,7 +88,7 @@ class Firebase
   # Write the data at path but does not delete ommited children. Returns the data
   #   Firebase.update('users/info', { 'name' => 'Oscar' }) => { 'name' => 'Oscar' }
   def update(path, data)
-    request.update(path, data)
+    request.patch(path, data)
   end
 
 end

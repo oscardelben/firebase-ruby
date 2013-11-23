@@ -6,10 +6,10 @@ require 'uri'
 class Firebase
   class Request
 
-    attr_accessor :uri, :auth
+    attr_accessor :base_uri, :auth
 
-    def initialize(uri, auth=nil)
-      @uri = uri
+    def initialize(base_uri, auth=nil)
+      @base_uri = base_uri
       @auth = auth
     end
 
@@ -34,12 +34,9 @@ class Firebase
     end
 
     def build_url(path)
-      host = @uri || Firebase.base_uri
       path = "#{path}.json"
-      query_string = @auth || Firebase.auth ? "?auth=#{@auth || Firebase.auth}" : ""
-      url = URI.join(host, path, query_string)
-      reset_uri
-      reset_auth
+      query_string = auth ? "?auth=#{auth}" : ""
+      url = URI.join(base_uri, path, query_string)
 
       url.to_s
     end
@@ -47,8 +44,6 @@ class Firebase
     private
 
     def process(method, path, options={})
-      raise "Please set Firebase.base_uri before making requests" unless Firebase.base_uri || @uri
-
       @@hydra ||= Typhoeus::Hydra.new
       request = Typhoeus::Request.new(build_url(path),
                                       :body => options[:body],
@@ -56,32 +51,7 @@ class Firebase
       @@hydra.queue(request)
       @@hydra.run
 
-      new request.response
+      Firebase::Response.new(request.response)
     end
-
-  end
-
-  attr_accessor :response
-
-  def initialize(response)
-    @response = response
-  end
-
-  def body
-    JSON.parse(response.body, :quirks_mode => true)
-  rescue JSON::ParserError => e
-    response.body == 'null' ? nil : raise
-  end
-
-  def raw_body
-    response.body
-  end
-
-  def success?
-    [200, 204].include? response.code
-  end
-
-  def code
-    response.code
   end
 end
