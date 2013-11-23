@@ -17,12 +17,4 @@ describe "Firebase Request" do
       @req.build_url('users/eugene').should == 'https://test.firebaseio.com/users/eugene.json'
     end
   end
-
-  describe 'auth' do
-    it "should include a auth in the query string, if configured" do
-      req = Firebase::Request.new('https://test.firebaseio.com', 'secretkey')
-
-      req.build_url('users/eugene').should == 'https://test.firebaseio.com/users/eugene.json?auth=secretkey'
-    end
-  end
 end

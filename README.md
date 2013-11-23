@@ -33,6 +33,12 @@ firebase = Firebase.new(base_uri, secret_key)
 response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
 ```
 
+You can now pass custom query options to firebase:
+
+```ruby
+response = firebase.push("todos", :limit => 1)
+```
+
 So far, supported methods are:
 
 ```ruby

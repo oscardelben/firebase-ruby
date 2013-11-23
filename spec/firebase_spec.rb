@@ -13,14 +13,14 @@ describe "Firebase" do
 
   describe "set" do
     it "writes and returns the data" do
-      @req.should_receive(:put).with('users/info', data)
+      @req.should_receive(:put).with('users/info', data, {:auth => nil})
       @firebase.set('users/info', data)
     end
   end
 
   describe "get" do
     it "returns the data" do
-      @req.should_receive(:get).with('users/info')
+      @req.should_receive(:get).with('users/info', {:auth => nil})
       @firebase.get('users/info')
     end
 
@@ -51,22 +51,30 @@ describe "Firebase" do
 
   describe "push" do
     it "writes the data" do
-      @req.should_receive(:post).with('users', data)
+      @req.should_receive(:post).with('users', data, {:auth => nil})
       @firebase.push('users', data)
     end
   end
 
   describe "delete" do
     it "returns true" do
-      @req.should_receive(:delete).with('users/info')
+      @req.should_receive(:delete).with('users/info', {:auth => nil})
       @firebase.delete('users/info')
     end
   end
 
   describe "update" do
     it "updates and returns the data" do
-      @req.should_receive(:patch).with('users/info', data)
+      @req.should_receive(:patch).with('users/info', data, {:auth => nil})
       @firebase.update('users/info', data)
+    end
+  end
+
+  describe "options" do
+    it "passes custom options" do
+      firebase = Firebase.new('https://test.firebaseio.com', 'secret')
+      firebase.request.should_receive(:get).with('todos', {:auth => 'secret', :foo => 'bar'})
+      firebase.get('todos', :foo => 'bar')
     end
   end
 end
