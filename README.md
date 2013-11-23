@@ -42,11 +42,11 @@ response = firebase.push("todos", :limit => 1)
 So far, supported methods are:
 
 ```ruby
-set(path, data)
-get(path)
-push(path, data)
-delete(path)
-update(path, data)
+set(path, data, query_options)
+get(path, query_options)
+push(path, data, query_options)
+delete(path, query_options)
+update(path, data, query_options)
 ```
 
 More features are coming soon.
