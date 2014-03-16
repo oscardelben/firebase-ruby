@@ -1,4 +1,4 @@
-class Firebase
+module Firebase
   class Response
 
     attr_accessor :response

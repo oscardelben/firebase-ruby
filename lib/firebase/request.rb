@@ -3,7 +3,7 @@ require 'json'
 require 'open-uri'
 require 'uri'
 
-class Firebase
+module Firebase
   class Request
 
     attr_reader :base_uri

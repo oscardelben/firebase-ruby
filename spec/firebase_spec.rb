@@ -7,7 +7,7 @@ describe "Firebase" do
   end
 
   before do
-    @firebase = Firebase.new('https://test.firebaseio.com')
+    @firebase = Firebase::Client.new('https://test.firebaseio.com')
     @req = @firebase.request
   end
 
@@ -72,7 +72,7 @@ describe "Firebase" do
 
   describe "options" do
     it "passes custom options" do
-      firebase = Firebase.new('https://test.firebaseio.com', 'secret')
+      firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
       firebase.request.should_receive(:get).with('todos', {:auth => 'secret', :foo => 'bar'})
       firebase.get('todos', :foo => 'bar')
     end
