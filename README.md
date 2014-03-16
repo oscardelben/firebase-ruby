@@ -17,7 +17,7 @@ gem install firebase
 ```ruby
 base_uri = 'https://<your-firebase>.firebaseio.com/'
 
-firebase = Firebase.new(base_uri)
+firebase = Firebase::Client.new(base_uri)
 
 response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
 response.success? # => true
@@ -28,7 +28,7 @@ response.raw_body # => '{"name":"-INOQPH-aV_psbk3ZXEX"}'
 
 If you have a read-only namespace, set your secret key as follows:
 ```ruby
-firebase = Firebase.new(base_uri, secret_key)
+firebase = Firebase::Client.new(base_uri, secret_key)
 
 response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
 ```
@@ -48,8 +48,6 @@ push(path, data, query_options)
 delete(path, query_options)
 update(path, data, query_options)
 ```
-
-More features are coming soon.
 
 More information about Firebase and the Firebase API is available at the
 [official website](http://www.firebase.com/).

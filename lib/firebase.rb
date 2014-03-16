@@ -4,11 +4,9 @@ module Firebase
     require 'firebase/request'
     require 'firebase/response'
 
-    class << self
-      def format_uri(other)
-        if other
-          other.end_with?("/") ? other : other + '/'
-        end
+    def self.format_uri(other)
+      if other
+        other.end_with?("/") ? other : other + '/'
       end
     end
 

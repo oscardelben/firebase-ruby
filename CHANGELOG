@@ -1,7 +1,7 @@
 - 0.2.0
 
 * You can now pass query options to get/push/set, etc.
-* The old syntax no longer works. You now need to create instance variables of Firebase
+* The old syntax no longer works. You now need to create instance variables of Firebase::Client.new(...)
 
 - 0.1.6
 
