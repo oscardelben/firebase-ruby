@@ -1,3 +1,7 @@
+- 0.2.1
+
+* Fix auth parse exception
+
 - 0.2.0
 
 * You can now pass query options to get/push/set, etc.
