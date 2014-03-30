@@ -13,14 +13,14 @@ describe "Firebase" do
 
   describe "set" do
     it "writes and returns the data" do
-      @req.should_receive(:put).with('users/info', data, {:auth => nil})
+      @req.should_receive(:put).with('users/info', data, {})
       @firebase.set('users/info', data)
     end
   end
 
   describe "get" do
     it "returns the data" do
-      @req.should_receive(:get).with('users/info', {:auth => nil})
+      @req.should_receive(:get).with('users/info', {})
       @firebase.get('users/info')
     end
 
@@ -51,21 +51,21 @@ describe "Firebase" do
 
   describe "push" do
     it "writes the data" do
-      @req.should_receive(:post).with('users', data, {:auth => nil})
+      @req.should_receive(:post).with('users', data, {})
       @firebase.push('users', data)
     end
   end
 
   describe "delete" do
     it "returns true" do
-      @req.should_receive(:delete).with('users/info', {:auth => nil})
+      @req.should_receive(:delete).with('users/info', {})
       @firebase.delete('users/info')
     end
   end
 
   describe "update" do
     it "updates and returns the data" do
-      @req.should_receive(:patch).with('users/info', data, {:auth => nil})
+      @req.should_receive(:patch).with('users/info', data, {})
       @firebase.update('users/info', data)
     end
   end

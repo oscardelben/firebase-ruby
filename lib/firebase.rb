@@ -49,7 +49,11 @@ module Firebase
     private
 
     def query_options(query)
-      { :auth => auth }.merge(query)
+      if auth
+        { :auth => auth }.merge(query)
+      else
+        query
+      end
     end
   end
 end
