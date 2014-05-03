@@ -47,7 +47,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<typhoeus>, [">= 0.6.1"])
       s.add_runtime_dependency(%q<json>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.8.3"])
+      s.add_development_dependency(%q<jeweler>,)
     else
       s.add_dependency(%q<typhoeus>, [">= 0.6.1"])
       s.add_dependency(%q<json>, [">= 0"])
