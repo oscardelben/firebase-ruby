@@ -45,7 +45,8 @@ module Firebase
       request = Typhoeus::Request.new(build_url(path),
                                       :body => body,
                                       :method => method,
-                                      :params => query_options)
+                                      :params => query_options,
+                                      :followlocation => true)
       response = request.run
       Firebase::Response.new(response)
     end
