@@ -1,20 +1,15 @@
+require 'patron'
+
 module Firebase
   class Client
-
     require 'firebase/request'
     require 'firebase/response'
-
-    def self.format_uri(other)
-      if other
-        other.end_with?("/") ? other : other + '/'
-      end
-    end
 
     attr_reader :auth, :request
 
     def initialize(base_uri, auth=nil)
-      uri = Firebase::Client.format_uri(base_uri)
-      @request = Firebase::Request.new(uri)
+      base_uri += '/' unless base_uri.end_with?('/')
+      @request = Firebase::Request.new(base_uri)
       @auth = auth
     end
 

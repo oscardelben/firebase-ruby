@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe "Firebase" do
-
   let (:data) do
     { 'name' => 'Oscar' }
   end
