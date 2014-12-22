@@ -1,6 +1,5 @@
 module Firebase
   class Response
-
     attr_accessor :response
 
     def initialize(response)
@@ -8,9 +7,9 @@ module Firebase
     end
 
     def body
-      JSON.parse(response.body, :quirks_mode => true)
-    rescue JSON::ParserError => e
-      response.body == 'null' ? nil : raise
+      unless response.body == 'null'
+        JSON.parse(response.body, :quirks_mode => true)
+      end
     end
 
     def raw_body
@@ -18,11 +17,11 @@ module Firebase
     end
 
     def success?
-      [200, 204].include? response.code
+      [ 200, 204 ].include? response.status
     end
 
     def code
-      response.code
+      response.status
     end
   end
 end

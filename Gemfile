@@ -3,7 +3,7 @@ source "http://rubygems.org"
 # Example:
 #   gem "activesupport", ">= 2.3.5"
 
-gem 'typhoeus', ">= 0.6.1"
+gem 'patron'
 gem 'json'
 
 # Add dependencies to develop your gem here.
