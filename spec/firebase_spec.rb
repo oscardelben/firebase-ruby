@@ -1,9 +1,18 @@
 require 'spec_helper'
 
 describe "Firebase" do
-
   let (:data) do
     { 'name' => 'Oscar' }
+  end
+
+  describe "invalid uri" do
+    it "should raise on http" do
+      expect{ Firebase::Client.new('http://test.firebaseio.com') }.to raise_error(ArgumentError)
+    end
+
+    it 'should raise on empty' do
+      expect{ Firebase::Client.new('') }.to raise_error(ArgumentError)
+    end
   end
 
   before do

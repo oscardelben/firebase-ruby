@@ -1,15 +1,11 @@
-require 'typhoeus'
+require 'httpclient'
 require 'json'
-require 'open-uri'
-require 'uri'
 
 module Firebase
   class Request
-
-    attr_reader :base_uri
-
     def initialize(base_uri)
-      @base_uri = base_uri
+      @client = HTTPClient.new(base_url: base_uri)
+      @client.default_header['Content-Type'] = 'application/json'
     end
 
     def get(path, query_options)
@@ -32,23 +28,11 @@ module Firebase
       process(:patch, path, value.to_json, query_options)
     end
 
-    def build_url(path)
-      path = "#{path}.json"
-      url = URI.join(base_uri, path)
-
-      url.to_s
-    end
-
     private
 
     def process(method, path, body=nil, query_options={})
-      request = Typhoeus::Request.new(build_url(path),
-                                      :body => body,
-                                      :method => method,
-                                      :params => query_options)
-      response = request.run
+      response = @client.request(method, "#{path}.json", body: body, query: query_options)
       Firebase::Response.new(response)
     end
-
   end
 end
