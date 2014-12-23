@@ -1,20 +1,17 @@
+require 'uri'
+require 'firebase/request'
+require 'firebase/response'
+
 module Firebase
   class Client
-
-    require 'firebase/request'
-    require 'firebase/response'
-
-    def self.format_uri(other)
-      if other
-        other.end_with?("/") ? other : other + '/'
-      end
-    end
-
     attr_reader :auth, :request
 
     def initialize(base_uri, auth=nil)
-      uri = Firebase::Client.format_uri(base_uri)
-      @request = Firebase::Request.new(uri)
+      if base_uri !~ URI::regexp(%w(https))
+        raise ArgumentError.new('base_uri must be a valid https uri')
+      end
+      base_uri += '/' unless base_uri.end_with?('/')
+      @request = Firebase::Request.new(base_uri)
       @auth = auth
     end
 

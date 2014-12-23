@@ -1,6 +1,6 @@
 # firebase
 
-Ruby wrapper for the Firebase backend API.
+Ruby wrapper for the [Firebase REST API](https://www.firebase.com/docs/rest/api/).
 
 Changes are sent to all subscribed clients automatically, so you can
 update your clients **in realtime from the backend**.
