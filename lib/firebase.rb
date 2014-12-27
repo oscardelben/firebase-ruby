@@ -10,14 +10,27 @@ module Firebase
       end
     end
 
-    attr_reader :auth, :request
+    attr_reader :auth, :request, :base_uri
 
     def initialize(base_uri, auth=nil)
-      uri = Firebase::Client.format_uri(base_uri)
-      @request = Firebase::Request.new(uri)
+      @base_uri = Firebase::Client.format_uri(base_uri)
+      @request = Firebase::Request.new(@base_uri)
       @auth = auth
     end
 
+		# Returns the URI of this Firebase reference
+		#		Firebase.ref => 'https://example.firebaseio.com/'
+		def ref
+			@base_uri
+		end
+		
+		# Creates a new client that is in a child domain relative to the present client
+		#		Firebase.ref => 'https://example.firebaseio.com/'
+		# 	Firebase.child("within").ref =>	'https://example.firebaseio.com/within'
+		def child(uri)
+			Firebase::Client.new "#{ @base_uri }#{uri}"
+		end
+		
     # Writes and returns the data
     #   Firebase.set('users/info', { 'name' => 'Oscar' }) => { 'name' => 'Oscar' }
     def set(path, data, query={})
