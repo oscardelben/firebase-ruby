@@ -5,12 +5,31 @@ describe "Firebase" do
   let (:data) do
     { 'name' => 'Oscar' }
   end
-
+	
   before do
     @firebase = Firebase::Client.new('https://test.firebaseio.com')
     @req = @firebase.request
   end
 
+	describe "ref" do
+		it "returns the reference URI of this firebase object" do
+			@firebase.ref.should eql 'https://test.firebaseio.com/'
+		end
+	end
+	
+	describe "child" do
+		it "returns a child reference of this firebase object" do
+			@firebase.child("child").ref.should eql 'https://test.firebaseio.com/child/'
+		end
+		
+		it "should work just like its parent" do
+			child_ref = @firebase.child("child")
+			child_req = child_ref.request
+			child_req.should_receive(:get).with('info', {})
+			child_ref.get('info')
+		end
+	end
+		
   describe "set" do
     it "writes and returns the data" do
       @req.should_receive(:put).with('users/info', data, {})
