@@ -3,6 +3,7 @@
 ## 0.2.3 (in development)
 
 * Switch from problematic `typhoeus` client to `HTTPClient`
+* File permissions issue fix
 
 ## 0.2.2
 
