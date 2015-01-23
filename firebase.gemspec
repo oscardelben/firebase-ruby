@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "firebase"
-  s.version = "0.2.2"
+  s.version = "0.2.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Oscar Del Ben"]
-  s.date = "2014-05-03"
+  s.date = "2015-01-23"
   s.description = "Firebase wrapper for Ruby"
   s.email = "info@oscardelben.com"
   s.extra_rdoc_files = [
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
     ".rspec",
-    "CHANGELOG",
+    "CHANGELOG.md",
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",
@@ -30,7 +30,6 @@ Gem::Specification.new do |s|
     "lib/firebase.rb",
     "lib/firebase/request.rb",
     "lib/firebase/response.rb",
-    "spec/firebase_request_spec.rb",
     "spec/firebase_spec.rb",
     "spec/spec_helper.rb"
   ]
@@ -44,18 +43,18 @@ Gem::Specification.new do |s|
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<typhoeus>, [">= 0.6.1"])
+      s.add_runtime_dependency(%q<httpclient>, [">= 0"])
       s.add_runtime_dependency(%q<json>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
     else
-      s.add_dependency(%q<typhoeus>, [">= 0.6.1"])
+      s.add_dependency(%q<httpclient>, [">= 0"])
       s.add_dependency(%q<json>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
     end
   else
-    s.add_dependency(%q<typhoeus>, [">= 0.6.1"])
+    s.add_dependency(%q<httpclient>, [">= 0"])
     s.add_dependency(%q<json>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
