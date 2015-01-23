@@ -31,7 +31,7 @@ module Firebase
     private
 
     def process(method, path, body=nil, query_options={})
-      response = @client.request(method, "#{path}.json", body: body, query: query_options)
+      response = @client.request(method, "#{path}.json", body: body, query: query_options, follow_redirect: true)
       Firebase::Response.new(response)
     end
   end
