@@ -1,9 +1,10 @@
 # Changelog
 
-## 0.2.3 (in development)
+## 0.2.3
 
 * Switch from problematic `typhoeus` client to `HTTPClient`
 * File permissions issue fix
+* Follow redirect headers by default
 
 ## 0.2.2
 
