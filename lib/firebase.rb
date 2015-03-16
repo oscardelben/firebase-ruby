@@ -1,6 +1,7 @@
 require 'uri'
 require 'firebase/request'
 require 'firebase/response'
+require 'firebase/server_value'
 
 module Firebase
   class Client

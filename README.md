@@ -19,7 +19,7 @@ base_uri = 'https://<your-firebase>.firebaseio.com/'
 
 firebase = Firebase::Client.new(base_uri)
 
-response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
+response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1, :created => Firebase::ServerValue::TIMESTAMP })
 response.success? # => true
 response.code # => 200
 response.body # => { 'name' => "-INOQPH-aV_psbk3ZXEX" }
