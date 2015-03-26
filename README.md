@@ -19,7 +19,7 @@ base_uri = 'https://<your-firebase>.firebaseio.com/'
 
 firebase = Firebase::Client.new(base_uri)
 
-response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1, :created => Firebase::ServerValue::TIMESTAMP })
+response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
 response.success? # => true
 response.code # => 200
 response.body # => { 'name' => "-INOQPH-aV_psbk3ZXEX" }
@@ -39,6 +39,12 @@ You can now pass custom query options to firebase:
 response = firebase.push("todos", :limit => 1)
 ```
 
+To populate a value with a Firebase server timestamp, you can pass in a key of ```Firebase::ServerValue::TIMESTAMP```:
+
+```ruby
+response = firebase.push("todos", { :name => 'Pick the milk', :created => Firebase::ServerValue::TIMESTAMP })
+```
+
 So far, supported methods are:
 
 ```ruby
@@ -56,4 +62,3 @@ More information about Firebase and the Firebase API is available at the
 
 Copyright (c) 2013 Oscar Del Ben. See LICENSE.txt for
 further details.
-
