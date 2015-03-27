@@ -39,6 +39,12 @@ You can now pass custom query options to firebase:
 response = firebase.push("todos", :limit => 1)
 ```
 
+To populate a value with a Firebase server timestamp, you can pass in a key of ```Firebase::ServerValue::TIMESTAMP```:
+
+```ruby
+response = firebase.push("todos", { :name => 'Pick the milk', :created => Firebase::ServerValue::TIMESTAMP })
+```
+
 So far, supported methods are:
 
 ```ruby
@@ -56,4 +62,3 @@ More information about Firebase and the Firebase API is available at the
 
 Copyright (c) 2013 Oscar Del Ben. See LICENSE.txt for
 further details.
-
