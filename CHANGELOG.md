@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.4
+
+* Add support for server timestamp. 
+
 ## 0.2.3
 
 * Switch from problematic `typhoeus` client to `HTTPClient`
