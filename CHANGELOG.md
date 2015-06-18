@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.5
+
+* Add support for setting request timeout values. 
+
 ## 0.2.4
 
 * Add support for server timestamp. 

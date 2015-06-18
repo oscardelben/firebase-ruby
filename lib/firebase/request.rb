@@ -3,8 +3,14 @@ require 'json'
 
 module Firebase
   class Request
-    def initialize(base_uri)
+    attr_reader :client
+
+    def initialize(base_uri, params={})
       @client = HTTPClient.new(base_url: base_uri)
+      @client.connect_timeout = params[:connect_timeout] if params.include?(:connect_timeout)
+      @client.send_timeout = params[:send_timeout] if params.include?(:send_timeout)
+      @client.receive_timeout = params[:receive_timeout] if params.include?(:receive_timeout)
+
       @client.default_header['Content-Type'] = 'application/json'
     end
 

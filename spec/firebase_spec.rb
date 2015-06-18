@@ -15,6 +15,24 @@ describe "Firebase" do
     end
   end
 
+  describe "valid uri with timeout params" do
+    it "should set connect_timeout correctly" do
+      client = Firebase::Client.new('https://test.firebaseio.com', nil, {connect_timeout: 30})
+      expect(client.request.client.connect_timeout).to be(30)
+    end
+
+    it "should set send_timeout correctly" do
+      client = Firebase::Client.new('https://test.firebaseio.com', nil, {send_timeout: 30})
+      expect(client.request.client.send_timeout).to be(30)
+    end
+
+    it "should set receive_timeout correctly" do
+      client = Firebase::Client.new('https://test.firebaseio.com', nil, {receive_timeout: 30})
+      expect(client.request.client.receive_timeout).to be(30)
+    end
+
+  end
+
   before do
     @firebase = Firebase::Client.new('https://test.firebaseio.com')
     @req = @firebase.request

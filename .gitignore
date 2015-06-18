@@ -48,3 +48,6 @@ pkg
 # For rubinius:
 #*.rbc
 *.swp
+
+#for idea
+*.idea

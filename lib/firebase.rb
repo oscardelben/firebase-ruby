@@ -7,12 +7,12 @@ module Firebase
   class Client
     attr_reader :auth, :request
 
-    def initialize(base_uri, auth=nil)
+    def initialize(base_uri, auth=nil, params={})
       if base_uri !~ URI::regexp(%w(https))
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
       base_uri += '/' unless base_uri.end_with?('/')
-      @request = Firebase::Request.new(base_uri)
+      @request = Firebase::Request.new(base_uri, params)
       @auth = auth
     end
 
