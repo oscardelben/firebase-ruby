@@ -17,7 +17,7 @@ gem install firebase
 ```ruby
 base_uri = 'https://<your-firebase>.firebaseio.com/'
 
-firebase = Firebase::Client.new(base_uri)
+firebase = Firebase::Client.new(base_uri, { :connect_timeout => , :send_timeout})
 
 response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
 response.success? # => true
@@ -31,6 +31,11 @@ If you have a read-only namespace, set your secret key as follows:
 firebase = Firebase::Client.new(base_uri, secret_key)
 
 response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
+```
+
+If you have to configure HTTP Client timeout, set times as follows:
+```ruby
+firebase = Firebase::Client.new(base_uri, { :connect_timeout => 5000, :send_timeout => 5000, :receive_timeout => 5000})
 ```
 
 You can now pass custom query options to firebase:
