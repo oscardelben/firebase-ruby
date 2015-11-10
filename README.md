@@ -17,7 +17,7 @@ gem install firebase
 ```ruby
 base_uri = 'https://<your-firebase>.firebaseio.com/'
 
-firebase = Firebase::Client.new(base_uri, { :connect_timeout => , :send_timeout})
+firebase = Firebase::Client.new(base_uri)
 
 response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
 response.success? # => true
