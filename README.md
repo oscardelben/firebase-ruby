@@ -33,10 +33,16 @@ firebase = Firebase::Client.new(base_uri, secret_key)
 response = firebase.push("todos", { :name => 'Pick the milk', :priority => 1 })
 ```
 
-If you have to configure HTTP Client timeout, set times as follows:
+The problem with having no timeouts, is if the server you are talking to misbehaves and takes 60 seconds, 5 minutes, 10 minutes, who knows, to return a response — your app will happily hang waiting for it. (Yes, this has happened to me).  Just about any I/O operation needs a timeout.
+You can set timeout for three phases of HTTP request as follows ([See default values](https://github.com/nahi/httpclient/blob/285cf2fa6cddce11abbf600e6f50fb6bfb3ae16a/lib/httpclient/session.rb#L130)):
 ```ruby
-firebase = Firebase::Client.new(base_uri, { :connect_timeout => 5000, :send_timeout => 5000, :receive_timeout => 5000})
+firebase = Firebase::Client.new(base_uri, { 
+	:connect_timeout => 10,		# max waiting time to establish connection
+	:send_timeout => 60,		# max waiting time to send data to server
+	:receive_timeout => 10		# max waiting time to receive response from server
+	})
 ```
+
 
 You can now pass custom query options to firebase:
 
