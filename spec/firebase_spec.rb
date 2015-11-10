@@ -17,7 +17,6 @@ describe "Firebase" do
 
   before do
     @firebase = Firebase::Client.new('https://test.firebaseio.com')
-    @req = @firebase.request
   end
 
   describe "set" do
