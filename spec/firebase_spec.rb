@@ -22,14 +22,14 @@ describe "Firebase" do
 
   describe "set" do
     it "writes and returns the data" do
-      @req.should_receive(:put).with('users/info', data, {})
+      @firebase.should_receive(:process).with(:put, 'users/info', data, {})
       @firebase.set('users/info', data)
     end
   end
 
   describe "get" do
     it "returns the data" do
-      @req.should_receive(:get).with('users/info', {})
+      @firebase.should_receive(:process).with(:get, 'users/info', {})
       @firebase.get('users/info')
     end
 
@@ -60,29 +60,33 @@ describe "Firebase" do
 
   describe "push" do
     it "writes the data" do
-      @req.should_receive(:post).with('users', data, {})
+      @firebase.should_receive(:process).with(:post, 'users', data, {})
       @firebase.push('users', data)
     end
   end
 
   describe "delete" do
     it "returns true" do
-      @req.should_receive(:delete).with('users/info', {})
+      @firebase.should_receive(:process).with(:delete, 'users/info', {})
       @firebase.delete('users/info')
     end
   end
 
   describe "update" do
     it "updates and returns the data" do
-      @req.should_receive(:patch).with('users/info', data, {})
+      @firebase.should_receive(:process).with(:patch, 'users/info', data, {})
       @firebase.update('users/info', data)
     end
   end
 
-  describe "options" do
-    it "passes custom options" do
+  describe "http processing" do
+    it "sends custom auth" do
       firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
-      firebase.request.should_receive(:get).with('todos', {:auth => 'secret', :foo => 'bar'})
+      firebase.request.should_receive(:request).with(:get, "todos.json", {
+        :body => {:foo => 'bar'}.to_json,
+        :query => {:auth => "secret"},
+        :follow_redirect => true
+      })
       firebase.get('todos', :foo => 'bar')
     end
   end
