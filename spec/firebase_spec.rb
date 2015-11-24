@@ -21,14 +21,14 @@ describe "Firebase" do
 
   describe "set" do
     it "writes and returns the data" do
-      @firebase.should_receive(:process).with(:put, 'users/info', data, {})
+      expect(@firebase).to receive(:process).with(:put, 'users/info', data, {})
       @firebase.set('users/info', data)
     end
   end
 
   describe "get" do
     it "returns the data" do
-      @firebase.should_receive(:process).with(:get, 'users/info', nil, {})
+      expect(@firebase).to receive(:process).with(:get, 'users/info', nil, {})
       @firebase.get('users/info')
     end
 
@@ -37,7 +37,7 @@ describe "Firebase" do
         :orderBy => '"$key"',
         :startAt => '"A1"'
       }
-      @firebase.should_receive(:process).with(:get, 'users/info', nil, params)
+      expect(@firebase).to receive(:process).with(:get, 'users/info', nil, params)
       @firebase.get('users/info', params)
     end
 
@@ -81,39 +81,39 @@ describe "Firebase" do
     it "return true if response body contains 'true'" do
       mock_response = double(:body => 'true')
       response = Firebase::Response.new(mock_response)
-      response.body.should eq(true)
+      expect(response.body).to eq(true)
     end
 
     it "return false if response body contains 'false'" do
       mock_response = double(:body => 'false')
       response = Firebase::Response.new(mock_response)
-      response.body.should eq(false)
+      expect(response.body).to eq(false)
     end
 
     it "raises JSON::ParserError if response body contains invalid JSON" do
       mock_response = double(:body => '{"this is wrong"')
       response = Firebase::Response.new(mock_response)
-      expect { response.body }.to raise_error
+      expect { response.body }.to raise_error(JSON::ParserError)
     end
   end
 
   describe "push" do
     it "writes the data" do
-      @firebase.should_receive(:process).with(:post, 'users', data, {})
+      expect(@firebase).to receive(:process).with(:post, 'users', data, {})
       @firebase.push('users', data)
     end
   end
 
   describe "delete" do
     it "returns true" do
-      @firebase.should_receive(:process).with(:delete, 'users/info', nil, {})
+      expect(@firebase).to receive(:process).with(:delete, 'users/info', nil, {})
       @firebase.delete('users/info')
     end
   end
 
   describe "update" do
     it "updates and returns the data" do
-      @firebase.should_receive(:process).with(:patch, 'users/info', data, {})
+      expect(@firebase).to receive(:process).with(:patch, 'users/info', data, {})
       @firebase.update('users/info', data)
     end
   end
@@ -121,7 +121,7 @@ describe "Firebase" do
   describe "http processing" do
     it "sends custom auth" do
       firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
-      firebase.request.should_receive(:request).with(:get, "todos.json", {
+      expect(firebase.request).to receive(:request).with(:get, "todos.json", {
         :body => nil,
         :query => {:auth => "secret", :foo => 'bar'},
         :follow_redirect => true
