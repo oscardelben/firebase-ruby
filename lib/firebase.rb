@@ -30,7 +30,7 @@ module Firebase
 
     # Returns the data at path
     def get(path, query={})
-      process :get, path, query
+      process :get, path, nil, query
     end
 
     # Writes the data, returns the key name of the data added
@@ -41,7 +41,7 @@ module Firebase
 
     # Deletes the data at path and returs true
     def delete(path, query={})
-      process :delete, path, query
+      process :delete, path, nil, query
     end
 
     # Write the data at path but does not delete ommited children. Returns the data
@@ -55,7 +55,7 @@ module Firebase
     def process(verb, path, data=nil, query={})
       Firebase::Response.new @request.request(verb, "#{path}.json", {
         :body             => (data && data.to_json),
-        :query            => (auth ? { :auth => auth }.merge(query) : query),
+        :query            => (@auth ? { :auth => @auth }.merge(query) : query),
         :follow_redirect  => true
       })
     end

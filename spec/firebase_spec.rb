@@ -28,8 +28,48 @@ describe "Firebase" do
 
   describe "get" do
     it "returns the data" do
-      @firebase.should_receive(:process).with(:get, 'users/info', {})
+      @firebase.should_receive(:process).with(:get, 'users/info', nil, {})
       @firebase.get('users/info')
+    end
+
+    it "correctly passes custom ordering params" do
+      params = {
+        :orderBy => '"$key"',
+        :startAt => '"A1"'
+      }
+      @firebase.should_receive(:process).with(:get, 'users/info', nil, params)
+      @firebase.get('users/info', params)
+    end
+
+    it "works when run against real Firebase dataset" do
+      firebase = Firebase::Client.new 'https://dinosaur-facts.firebaseio.com'
+      response = firebase.get 'dinosaurs', :orderBy => '"$key"', :startAt => '"a"', :endAt => '"m"'
+      expect(response.body).to eq({
+        "bruhathkayosaurus" => {
+          "appeared" => -70000000,
+            "height" => 25,
+            "length" => 44,
+             "order" => "saurischia",
+          "vanished" => -70000000,
+            "weight" => 135000
+        },
+        "lambeosaurus" => {
+          "appeared" => -76000000,
+            "height" => 2.1,
+            "length" => 12.5,
+             "order" => "ornithischia",
+          "vanished" => -75000000,
+            "weight" => 5000
+        },
+        "linhenykus" => {
+          "appeared" => -85000000,
+            "height" => 0.6,
+            "length" => 1,
+             "order" => "theropoda",
+          "vanished" => -75000000,
+            "weight" => 3
+        }
+      })
     end
 
     it "return nil if response body contains 'null'" do
@@ -66,7 +106,7 @@ describe "Firebase" do
 
   describe "delete" do
     it "returns true" do
-      @firebase.should_receive(:process).with(:delete, 'users/info', {})
+      @firebase.should_receive(:process).with(:delete, 'users/info', nil, {})
       @firebase.delete('users/info')
     end
   end
@@ -82,8 +122,8 @@ describe "Firebase" do
     it "sends custom auth" do
       firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
       firebase.request.should_receive(:request).with(:get, "todos.json", {
-        :body => {:foo => 'bar'}.to_json,
-        :query => {:auth => "secret"},
+        :body => nil,
+        :query => {:auth => "secret", :foo => 'bar'},
         :follow_redirect => true
       })
       firebase.get('todos', :foo => 'bar')
