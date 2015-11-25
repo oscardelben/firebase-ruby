@@ -68,6 +68,7 @@ DEPENDENCIES
   httpclient
   jeweler
   json
+  rake
   rspec
 
 BUNDLED WITH
