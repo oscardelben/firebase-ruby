@@ -1,4 +1,4 @@
-# firebase
+# firebase [![Build Status](https://travis-ci.org/oscardelben/firebase-ruby.svg?branch=master)](https://travis-ci.org/oscardelben/firebase-ruby)
 
 Ruby wrapper for the [Firebase REST API](https://www.firebase.com/docs/rest/api/).
 
