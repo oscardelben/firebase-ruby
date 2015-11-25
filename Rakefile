@@ -11,19 +11,22 @@ rescue Bundler::BundlerError => e
 end
 require 'rake'
 
-require 'jeweler'
-Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "firebase"
-  gem.homepage = "http://github.com/oscardelben/firebase-ruby"
-  gem.license = "MIT"
-  gem.summary = %Q{Firebase wrapper for Ruby}
-  gem.description = %Q{Firebase wrapper for Ruby}
-  gem.email = "info@oscardelben.com"
-  gem.authors = ["Oscar Del Ben"]
-  # dependencies defined in Gemfile
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+    gem.name = "firebase"
+    gem.homepage = "http://github.com/oscardelben/firebase-ruby"
+    gem.license = "MIT"
+    gem.summary = %Q{Firebase wrapper for Ruby}
+    gem.description = %Q{Firebase wrapper for Ruby}
+    gem.email = "info@oscardelben.com"
+    gem.authors = ["Oscar Del Ben"]
+    # dependencies defined in Gemfile
+  end
+  Jeweler::RubygemsDotOrgTasks.new
+rescue LoadError
 end
-Jeweler::RubygemsDotOrgTasks.new
 
 require 'rspec/core'
 require 'rspec/core/rake_task'
