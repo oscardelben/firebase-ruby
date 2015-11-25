@@ -69,6 +69,7 @@ DEPENDENCIES
   jeweler
   json
   rake
+  rdoc
   rspec
 
 BUNDLED WITH
