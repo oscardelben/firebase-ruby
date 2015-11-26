@@ -71,6 +71,3 @@ DEPENDENCIES
   rake
   rdoc
   rspec
-
-BUNDLED WITH
-   1.10.6
