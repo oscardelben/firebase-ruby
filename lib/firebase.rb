@@ -6,9 +6,9 @@ require 'uri'
 
 module Firebase
   class Client
-    attr_reader :auth, :request
+    attr_reader :auth, :request, :blacklist
 
-    def initialize(base_uri, auth=nil)
+    def initialize(base_uri, auth=nil, blacklist=[])
       if base_uri !~ URI::regexp(%w(https))
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
@@ -20,6 +20,7 @@ module Firebase
         }
       })
       @auth = auth
+      @blacklist = blacklist.map { |p| standardize_path(p) }
     end
 
     # Writes and returns the data
@@ -53,11 +54,23 @@ module Firebase
     private
 
     def process(verb, path, data=nil, query={})
-      Firebase::Response.new @request.request(verb, "#{path}.json", {
-        :body             => (data && data.to_json),
-        :query            => (@auth ? { :auth => @auth }.merge(query) : query),
-        :follow_redirect  => true
-      })
+      path = standardize_path(path)
+      unless @blacklist.include?(path)
+        Firebase::Response.new @request.request(verb, "#{path}.json", {
+          :body             => (data && data.to_json),
+          :query            => (@auth ? { :auth => @auth }.merge(query) : query),
+          :follow_redirect  => true
+        })
+      else
+        raise ArgumentError.new("path (#{path}) was included in your blacklist")
+      end
+    end
+
+    def standardize_path(uri)
+      uri.chomp!('.json') if uri.end_with?('.json')
+      uri.chomp!('/') if uri.end_with?('/')
+      uri = "/#{uri}" unless uri.start_with?('/')
+      uri
     end
   end
 end
