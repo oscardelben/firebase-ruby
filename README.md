@@ -49,6 +49,16 @@ response = firebase.push("todos", {
 })
 ```
 
+To update multiple values that are not direct descendants, supply their paths as keys in the payload to update:
+
+```ruby
+# note the empty path string here as the first argument
+firebase.update('', {
+  "users/posts/#{postID}" => true,
+  "posts/#{postID}" => text
+})
+```
+
 So far, supported methods are:
 
 ```ruby
