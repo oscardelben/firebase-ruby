@@ -7,18 +7,14 @@ require 'uri'
 module Firebase
   class Client
     attr_reader :auth, :request
+    CONTENT_TYPE = 'application/json'
 
     def initialize(base_uri, auth=nil)
       if base_uri !~ URI::regexp(%w(https))
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
       base_uri += '/' unless base_uri.end_with?('/')
-      @request = HTTPClient.new({
-        :base_url => base_uri,
-        :default_header => {
-          'Content-Type' => 'application/json'
-        }
-      })
+      @base_uri = base_uri
       @auth = auth
     end
 
@@ -52,8 +48,17 @@ module Firebase
 
     private
 
+    def client
+      HTTPClient.new({
+        :base_url => @base_uri,
+        :default_header => {
+          'Content-Type' => CONTENT_TYPE
+        }
+      })
+    end
+
     def process(verb, path, data=nil, query={})
-      Firebase::Response.new @request.request(verb, "#{path}.json", {
+      Firebase::Response.new client.request(verb, "#{path}.json", {
         :body             => (data && data.to_json),
         :query            => (@auth ? { :auth => @auth }.merge(query) : query),
         :follow_redirect  => true
