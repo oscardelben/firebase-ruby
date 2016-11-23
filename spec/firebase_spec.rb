@@ -121,12 +121,19 @@ describe "Firebase" do
   describe "http processing" do
     it "sends custom auth" do
       firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
-      expect(firebase.request).to receive(:request).with(:get, "todos.json", {
+      expect(firebase.request).to receive(:request).with(:get, "/todos.json", {
         :body => nil,
         :query => {:auth => "secret", :foo => 'bar'},
         :follow_redirect => true
       })
       firebase.get('todos', :foo => 'bar')
+    end
+
+    it "should raise on blacklisted endpoint" do
+      firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret', ['blacklisted'])
+      expect { firebase.get('blacklisted') }.to raise_error(ArgumentError)
+      expect { firebase.get('blacklisted.json') }.to raise_error(ArgumentError)
+      expect { firebase.get('/blacklisted') }.to raise_error(ArgumentError)
     end
   end
 end

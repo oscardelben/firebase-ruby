@@ -69,6 +69,22 @@ delete(path, query_options)
 update(path, data, query_options)
 ```
 
+### Blacklisting Endpoints
+
+Sometimes you will have endpoints that can contain millions of records. For example, `/users` could contain millions of nodes. When you send a request to these endpoints, there is a good chance that you will crash your firebase and be without service until you can get support. In an effort to prevent this, there is now a blacklist option you can pass when you instantiate your `Firebase::Client`.
+
+```ruby
+blacklist = ['/users', '/queue']
+firebase = Firebase::Client.new(base_uri, secret_key, blacklist)
+```
+
+The above code should return an `ArgumentError` if you try to request or send data to either `/users` or `/queue`.
+
+This can prevent you from making any detrimental errors in your code at the lowest possible error, instead of trying to catch these errors in your script.
+
+
+
+
 ### Configuring HTTP options
 
 [httpclient](https://github.com/nahi/httpclient) is used under the covers to make HTTP requests.
