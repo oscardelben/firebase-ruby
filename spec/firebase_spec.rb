@@ -13,6 +13,11 @@ describe "Firebase" do
     it 'should raise on empty' do
       expect{ Firebase::Client.new('') }.to raise_error(ArgumentError)
     end
+
+    it "should raise when a nonrelative path is used against a child reference" do
+      child_reference = Firebase::Client.new('https://test.firebaseio.com/child')
+      expect { child_reference.get('/path', {}) }.to raise_error(ArgumentError)
+    end
   end
 
   before do
