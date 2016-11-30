@@ -14,9 +14,9 @@ describe "Firebase" do
       expect{ Firebase::Client.new('') }.to raise_error(ArgumentError)
     end
 
-    it "should raise when a nonrelative path is used against a child reference" do
-      child_reference = Firebase::Client.new('https://test.firebaseio.com/child')
-      expect { child_reference.get('/path', {}) }.to raise_error(ArgumentError)
+    it "should raise when a nonrelative path is used" do
+      firebase = Firebase::Client.new('https://test.firebaseio.com')
+      expect { firebase.get('/path', {}) }.to raise_error(ArgumentError)
     end
   end
 
