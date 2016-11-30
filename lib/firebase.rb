@@ -53,18 +53,14 @@ module Firebase
     private
 
     def process(verb, path, data=nil, query={})
-      if non_relative_path_against_child_base_url?(path)
-        raise(ArgumentError.new("Path invalid: #{path}. A relative path must be used against a child base_uri"))
+      if path[0] == '/'
+        raise(ArgumentError.new("Invalid path: #{path}. Path must be relative"))
       end
       Firebase::Response.new @request.request(verb, "#{path}.json", {
         :body             => (data && data.to_json),
         :query            => (@auth ? { :auth => @auth }.merge(query) : query),
         :follow_redirect  => true
       })
-    end
-
-    def non_relative_path_against_child_base_url?(path)
-      path.lstrip[0] == '/' && URI(@request.base_url).path != "/"
     end
   end
 end
