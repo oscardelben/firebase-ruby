@@ -1,6 +1,6 @@
 require 'firebase/response'
 require 'firebase/server_value'
-require 'httpclient'
+require 'net/https'
 require 'json'
 require 'uri'
 
@@ -12,13 +12,10 @@ module Firebase
       if base_uri !~ URI::regexp(%w(https))
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
-      base_uri += '/' unless base_uri.end_with?('/')
-      @request = HTTPClient.new({
-        :base_url => base_uri,
-        :default_header => {
-          'Content-Type' => 'application/json'
-        }
-      })
+      uri = URI.parse(base_uri)
+      @request = Net::HTTP.new(uri.host, uri.port)
+      @request.use_ssl = true
+      @request.verify_mode = OpenSSL::SSL::VERIFY_NONE
       @auth = auth
     end
 
@@ -53,11 +50,26 @@ module Firebase
     private
 
     def process(verb, path, data=nil, query={})
-      Firebase::Response.new @request.request(verb, "#{path}.json", {
-        :body             => (data && data.to_json),
-        :query            => (@auth ? { :auth => @auth }.merge(query) : query),
-        :follow_redirect  => true
-      })
+      request_class = case verb
+                      when :put
+                        Net::HTTP::Put
+                      when :get
+                        Net::HTTP::Get
+                      when :post
+                        Net::HTTP::Post
+                      when :delete
+                        Net::HTTP::Delete
+                      when :patch
+                        Net::HTTP::Patch
+                      else
+                        raise ArgumentError.new("Unsupported verb: #{verb}")
+                      end
+      query_params = URI.encode_www_form(@auth ? { :auth => @auth }.merge(query) : query)
+      message = request_class.new(["/#{path}.json", query_params].join("?"))
+      message["Content-Type"] = "application/json"
+      message.body = data.to_json if data
+      Firebase::Response.new(@request.request(message))
+
     end
   end
 end
