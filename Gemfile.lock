@@ -19,7 +19,6 @@ GEM
       oauth2
     hashie (3.4.3)
     highline (1.7.8)
-    httpclient (2.7.0.1)
     jeweler (2.0.1)
       builder
       bundler (>= 1.0)
@@ -65,9 +64,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  httpclient
   jeweler
   json
   rake
   rdoc
   rspec
+
+BUNDLED WITH
+   1.13.6

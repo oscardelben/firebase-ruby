@@ -121,11 +121,7 @@ describe "Firebase" do
   describe "http processing" do
     it "sends custom auth" do
       firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
-      expect(firebase.request).to receive(:request).with(:get, "todos.json", {
-        :body => nil,
-        :query => {:auth => "secret", :foo => 'bar'},
-        :follow_redirect => true
-      })
+      expect(firebase.request).to receive(:request).with(an_instance_of(Net::HTTP::Get))
       firebase.get('todos', :foo => 'bar')
     end
   end
