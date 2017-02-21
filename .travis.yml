@@ -1,8 +1,8 @@
 sudo: false
 language: ruby
 rvm:
- - "1.8.7"
  - "1.9.3"
  - "2.1.5"
- - "2.2.3"
-bundler_args: --without utility
+ - "2.2.6"
+ - "2.3.3"
+ - "2.4.0"
