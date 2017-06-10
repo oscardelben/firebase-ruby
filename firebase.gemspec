@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.summary = "Firebase wrapper for Ruby"
 
-  s.add_runtime_dependency 'httpclient'
+  s.add_runtime_dependency 'httpclient', '>= 2.5.3'
   s.add_runtime_dependency 'json'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rdoc'
