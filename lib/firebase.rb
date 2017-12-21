@@ -1,5 +1,6 @@
 require 'firebase/response'
 require 'firebase/server_value'
+require 'googleauth'
 require 'httpclient'
 require 'json'
 require 'uri'
@@ -13,13 +14,22 @@ module Firebase
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
       base_uri += '/' unless base_uri.end_with?('/')
+      default_header = {
+        'Content-Type' => 'application/json'
+      }
+      if auth && File.file?(auth)
+        # Using Admin SDK private key file
+        scopes = %w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email)
+        credentials = Google::Auth::DefaultCredentials.make_creds(json_key_io: File.open(auth), scope: scopes)
+        default_header = credentials.apply(default_header)
+      else
+        # Using deprecated Database Secret
+        @auth = auth
+      end
       @request = HTTPClient.new({
         :base_url => base_uri,
-        :default_header => {
-          'Content-Type' => 'application/json'
-        }
+        :default_header => default_header
       })
-      @auth = auth
     end
 
     # Writes and returns the data
