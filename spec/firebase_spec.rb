@@ -133,13 +133,13 @@ describe "Firebase" do
       })
       firebase.get('todos', :foo => 'bar')
     end
-    
+
     it "sets custom auth header" do
-      expect(File).to receive(:file?).with('test_private_key.json').and_return(true)
-      expect(File).to receive(:open).with('test_private_key.json').and_return('private key')
+      private_key = '{ "private_key": true }'
       credentials = double()
       expect(credentials).to receive(:apply).with({ 'Content-Type' => 'application/json' }).and_return({ :authorization => 'Bearer abcdef', 'Content-Type' => 'application/json' })
-      expect(Google::Auth::DefaultCredentials).to receive(:make_creds).with(json_key_io: 'private key', scope: instance_of(Array)).and_return(credentials)
+      expect(StringIO).to receive(:new).with(private_key).and_return('StringIO private key')
+      expect(Google::Auth::DefaultCredentials).to receive(:make_creds).with(json_key_io: 'StringIO private key', scope: instance_of(Array)).and_return(credentials)
       expect(HTTPClient).to receive(:new).with({
         :base_url => 'https://test.firebaseio.com/',
         :default_header => {
@@ -147,7 +147,7 @@ describe "Firebase" do
           'Content-Type' => 'application/json'
         }
       })
-      firebase = Firebase::Client.new('https://test.firebaseio.com/', 'test_private_key.json')
+      Firebase::Client.new('https://test.firebaseio.com/', private_key)
     end
   end
 end
