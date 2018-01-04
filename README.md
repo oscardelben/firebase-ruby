@@ -27,7 +27,8 @@ response.body # => { 'name' => "-INOQPH-aV_psbk3ZXEX" }
 response.raw_body # => '{"name":"-INOQPH-aV_psbk3ZXEX"}'
 ```
 
-If you have a read-only namespace, set your secret key as follows:
+If you have a read-only namespace, you need to authenticate your Firebase client. `firebase-ruby` will attempt to determine if you are using the old or new [authentication method](https://firebase.google.com/docs/database/rest/auth) by whether your auth string is a valid JSON string or not.
+
 ```ruby
 # Using Firebase Admin SDK private key
 firebase = Firebase::Client.new(base_uri, private_key_json_string)
