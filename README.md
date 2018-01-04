@@ -29,9 +29,11 @@ response.raw_body # => '{"name":"-INOQPH-aV_psbk3ZXEX"}'
 
 If you have a read-only namespace, set your secret key as follows:
 ```ruby
-firebase = Firebase::Client.new(base_uri, secret_key)
+# Using Firebase Admin SDK private key
+firebase = Firebase::Client.new(base_uri, private_key_json_string)
 
-response = firebase.push("todos", { :name => 'Pick the milk', :'.priority' => 1 })
+# Using Firebase Database Secret (deprecated)
+firebase = Firebase::Client.new(base_uri, db_secret)
 ```
 
 You can now pass custom query options to firebase:

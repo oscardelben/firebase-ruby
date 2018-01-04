@@ -124,7 +124,7 @@ describe "Firebase" do
   end
 
   describe "http processing" do
-    it "sends custom auth" do
+    it "sends custom auth query" do
       firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
       expect(firebase.request).to receive(:request).with(:get, "todos.json", {
         :body => nil,
@@ -132,6 +132,22 @@ describe "Firebase" do
         :follow_redirect => true
       })
       firebase.get('todos', :foo => 'bar')
+    end
+
+    it "sets custom auth header" do
+      private_key = '{ "private_key": true }'
+      credentials = double()
+      expect(credentials).to receive(:apply).with({ 'Content-Type' => 'application/json' }).and_return({ :authorization => 'Bearer abcdef', 'Content-Type' => 'application/json' })
+      expect(StringIO).to receive(:new).with(private_key).and_return('StringIO private key')
+      expect(Google::Auth::DefaultCredentials).to receive(:make_creds).with(json_key_io: 'StringIO private key', scope: instance_of(Array)).and_return(credentials)
+      expect(HTTPClient).to receive(:new).with({
+        :base_url => 'https://test.firebaseio.com/',
+        :default_header => {
+          :authorization => 'Bearer abcdef',
+          'Content-Type' => 'application/json'
+        }
+      })
+      Firebase::Client.new('https://test.firebaseio.com/', private_key)
     end
   end
 end

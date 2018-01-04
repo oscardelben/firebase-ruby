@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'httpclient', '>= 2.5.3'
   s.add_runtime_dependency 'json'
+  s.add_runtime_dependency 'googleauth'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rdoc'
   s.add_development_dependency 'rspec'
