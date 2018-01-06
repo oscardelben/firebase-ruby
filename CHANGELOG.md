@@ -1,12 +1,16 @@
 # Changelog
 
+## 0.2.7
+
+* Support newer Firebase [authentication method](https://github.com/oscardelben/firebase-ruby/pull/81)
+
 ## 0.2.5
 
 * [Refactor to remove Request proxy class, expose http client](https://github.com/oscardelben/firebase-ruby/commit/138b1e1461ff33da506b0d7992b42e3544be9cf1)
 
 ## 0.2.4
 
-* Add support for server timestamp. 
+* Add support for server timestamp.
 
 ## 0.2.3
 

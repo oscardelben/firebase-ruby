@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "firebase"
-  s.version = "0.2.6"
+  s.version = "0.2.7"
 
   s.require_paths = ["lib"]
   s.authors = ["Oscar Del Ben"]
