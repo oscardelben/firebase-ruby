@@ -27,15 +27,24 @@ response.body # => { 'name' => "-INOQPH-aV_psbk3ZXEX" }
 response.raw_body # => '{"name":"-INOQPH-aV_psbk3ZXEX"}'
 ```
 
+### Authentication
 If you have a read-only namespace, you need to authenticate your Firebase client. `firebase-ruby` will attempt to determine if you are using the old or new [authentication method](https://firebase.google.com/docs/database/rest/auth) by whether your auth string is a valid JSON string or not.
 
-```ruby
-# Using Firebase Admin SDK private key
-firebase = Firebase::Client.new(base_uri, private_key_json_string)
-
+#### Using Firebase Database Secret (deprecated)
+```
 # Using Firebase Database Secret (deprecated)
 firebase = Firebase::Client.new(base_uri, db_secret)
 ```
+
+#### Using Firebase Admin SDK private key
+Go to the Firebase console and under `Project Settings` -> `Service Accounts` -> `Firebase Admin SDK` click on `GENERATE NEW PRIVATE KEY`. Save the json file and use it like this:
+
+```ruby
+# Using Firebase Admin SDK private key
+private_key_json_string = File.open('/path/to/your/generated/json').read
+firebase = Firebase::Client.new(base_uri, private_key_json_string)
+```
+
 
 You can now pass custom query options to firebase:
 
