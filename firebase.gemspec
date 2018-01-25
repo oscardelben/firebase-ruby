@@ -1,31 +1,26 @@
-Gem::Specification.new do |s|
-  s.name = "firebase"
-  s.version = "0.2.7"
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'firebase/version'
 
-  s.require_paths = ["lib"]
-  s.authors = ["Oscar Del Ben"]
-  s.date = "2015-11-26"
-  s.description = "Firebase wrapper for Ruby"
-  s.email = "info@oscardelben.com"
-  s.extra_rdoc_files = [
-    "CHANGELOG.md",
-    "LICENSE.txt",
-    "README.md"
-  ]
-  s.files = [
-    "lib/firebase.rb",
-    "lib/firebase/response.rb",
-    "lib/firebase/server_value.rb"
-  ]
-  s.homepage = "http://github.com/oscardelben/firebase-ruby"
-  s.licenses = ["MIT"]
-  s.summary = "Firebase wrapper for Ruby"
+Gem::Specification.new do |spec|
+  spec.name = 'firebase'
+  spec.version = Firebase::VERSION
 
-  s.add_runtime_dependency 'httpclient', '>= 2.5.3'
-  s.add_runtime_dependency 'json'
-  s.add_runtime_dependency 'googleauth'
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rdoc'
-  s.add_development_dependency 'rspec'
+  spec.require_paths = ['lib']
+  spec.authors = ['Oscar Del Ben']
+  spec.date = '2015-11-26'
+  spec.description = 'Firebase wrapper for Ruby'
+  spec.email = 'info@oscardelben.com'
+  spec.extra_rdoc_files = %w[CHANGELOG.md LICENSE.txt README.md]
+  spec.files = `git ls-files lib/`.split($/)
+  spec.homepage = 'http://github.com/oscardelben/firebase-ruby'
+  spec.licenses = ['MIT']
+  spec.summary = 'Firebase wrapper for Ruby'
+
+  spec.add_runtime_dependency 'httpclient', '>= 2.5.3'
+  spec.add_runtime_dependency 'json'
+  spec.add_runtime_dependency 'googleauth'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rdoc'
+  spec.add_development_dependency 'rspec'
 end
-
