@@ -14,22 +14,24 @@ module Firebase
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
       base_uri += '/' unless base_uri.end_with?('/')
-      default_header = {
-        'Content-Type' => 'application/json'
-      }
-      if auth && valid_json?(auth)
-        # Using Admin SDK private key
-        scopes = %w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email)
-        credentials = Google::Auth::DefaultCredentials.make_creds(json_key_io: StringIO.new(auth), scope: scopes)
-        default_header = credentials.apply(default_header)
-      else
-        # Using deprecated Database Secret
-        @auth = auth
-      end
       @request = HTTPClient.new({
         :base_url => base_uri,
-        :default_header => default_header
+        :default_header => {
+          'Content-Type' => 'application/json'
+        }
       })
+      if auth && valid_json?(auth)
+        # Using Admin SDK service account
+        @credentials = Google::Auth::DefaultCredentials.make_creds(
+          json_key_io: StringIO.new(auth),
+          scope: %w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email)
+        )
+        @credentials.apply!(@request.default_header)
+        @expires_at = @credentials.issued_at + 0.95 * @credentials.expires_in
+      else
+        # Using deprecated Database Secret
+        @secret = auth
+      end
     end
 
     # Writes and returns the data
@@ -66,9 +68,16 @@ module Firebase
       if path[0] == '/'
         raise(ArgumentError.new("Invalid path: #{path}. Path must be relative"))
       end
+
+      if @expires_at && Time.now > @expires_at
+        @credentials.refresh!
+        @credentials.apply! @request.default_header
+        @expires_at = @credentials.issued_at + 0.95 * @credentials.expires_in
+      end
+
       Firebase::Response.new @request.request(verb, "#{path}.json", {
         :body             => (data && data.to_json),
-        :query            => (@auth ? { :auth => @auth }.merge(query) : query),
+        :query            => (@secret ? { :auth => @secret }.merge(query) : query),
         :follow_redirect  => true
       })
     end
