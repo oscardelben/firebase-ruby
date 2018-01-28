@@ -26,14 +26,14 @@ describe "Firebase" do
 
   describe "set" do
     it "writes and returns the data" do
-      expect(@firebase).to receive(:process).with(:put, 'users/info', data, {})
+      expect(@firebase.request).to receive(:execute).with(method: :put, path: 'users/info', data: data, query: {})
       @firebase.set('users/info', data)
     end
   end
 
   describe "get" do
     it "returns the data" do
-      expect(@firebase).to receive(:process).with(:get, 'users/info', nil, {})
+      expect(@firebase.request).to receive(:execute).with(method: :get, path: 'users/info', query: {})
       @firebase.get('users/info')
     end
 
@@ -42,7 +42,7 @@ describe "Firebase" do
         :orderBy => '"$key"',
         :startAt => '"A1"'
       }
-      expect(@firebase).to receive(:process).with(:get, 'users/info', nil, params)
+      expect(@firebase.request).to receive(:execute).with(method: :get, path: 'users/info', query: params)
       @firebase.get('users/info', params)
     end
 
@@ -104,21 +104,21 @@ describe "Firebase" do
 
   describe "push" do
     it "writes the data" do
-      expect(@firebase).to receive(:process).with(:post, 'users', data, {})
+      expect(@firebase.request).to receive(:execute).with(method: :post, path: 'users', data: data, query: {})
       @firebase.push('users', data)
     end
   end
 
   describe "delete" do
     it "returns true" do
-      expect(@firebase).to receive(:process).with(:delete, 'users/info', nil, {})
+      expect(@firebase.request).to receive(:execute).with(method: :delete, path: 'users/info', query: {})
       @firebase.delete('users/info')
     end
   end
 
   describe "update" do
     it "updates and returns the data" do
-      expect(@firebase).to receive(:process).with(:patch, 'users/info', data, {})
+      expect(@firebase.request).to receive(:execute).with(method: :patch, path: 'users/info', data: data, query: {})
       @firebase.update('users/info', data)
     end
   end
@@ -126,27 +126,29 @@ describe "Firebase" do
   describe "http processing" do
     it "sends custom auth query" do
       firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
-      expect(firebase.request).to receive(:request).with(:get, "todos.json", {
+      expect(firebase.request.http_client).to receive(:request).with(:get, 'todos.json', {
         :body => nil,
         :query => {:auth => "secret", :foo => 'bar'},
         :follow_redirect => true
       })
+
       firebase.get('todos', :foo => 'bar')
     end
 
     it "sets custom auth header" do
       private_key = '{ "private_key": true }'
       credentials = double()
-      expect(credentials).to receive(:apply).with({ 'Content-Type' => 'application/json' }).and_return({ :authorization => 'Bearer abcdef', 'Content-Type' => 'application/json' })
+      expect(credentials).to receive(:apply).with({ 'Content-Type': 'application/json' }).and_return({ authorization: 'Bearer abcdef', 'Content-Type': 'application/json' })
       expect(StringIO).to receive(:new).with(private_key).and_return('StringIO private key')
       expect(Google::Auth::DefaultCredentials).to receive(:make_creds).with(json_key_io: 'StringIO private key', scope: instance_of(Array)).and_return(credentials)
       expect(HTTPClient).to receive(:new).with({
-        :base_url => 'https://test.firebaseio.com/',
-        :default_header => {
-          :authorization => 'Bearer abcdef',
-          'Content-Type' => 'application/json'
+        base_url: 'https://test.firebaseio.com/',
+        default_header: {
+          authorization: 'Bearer abcdef',
+          'Content-Type': 'application/json'
         }
       })
+
       Firebase::Client.new('https://test.firebaseio.com/', private_key)
     end
   end
