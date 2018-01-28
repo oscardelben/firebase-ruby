@@ -1,10 +1,14 @@
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'firebase/version'
+
 Gem::Specification.new do |s|
   s.name = "firebase"
-  s.version = "0.2.7"
+  s.version = Firebase::VERSION
 
   s.require_paths = ["lib"]
-  s.authors = ["Oscar Del Ben"]
-  s.date = "2015-11-26"
+  s.authors = ["Oscar Del Ben", "Vincent Woo"]
+  s.date = "2018-01-28"
   s.description = "Firebase wrapper for Ruby"
   s.email = "info@oscardelben.com"
   s.extra_rdoc_files = [
@@ -15,7 +19,8 @@ Gem::Specification.new do |s|
   s.files = [
     "lib/firebase.rb",
     "lib/firebase/response.rb",
-    "lib/firebase/server_value.rb"
+    "lib/firebase/server_value.rb",
+    "lib/firebase/version.rb"
   ]
   s.homepage = "http://github.com/oscardelben/firebase-ruby"
   s.licenses = ["MIT"]
