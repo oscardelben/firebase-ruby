@@ -1,10 +1,13 @@
-module Firebase
-  class Client
-    attr_reader :auth, :request
+# frozen_string_literal: true
 
-    def initialize(base_uri, auth = nil)      
+module Firebase
+  # All Database interactions implemented here
+  class Client
+    attr_reader :request
+
+    def initialize(base_uri, auth = nil)
       @request = Request.new(uri: base_uri,
-                            auth: auth)
+                             auth: auth)
     end
 
     # Writes and returns the data
@@ -33,11 +36,18 @@ module Firebase
                       query: query)
     end
 
-    # Write the data at path but does not delete ommited children. Returns the data
-    # Firebase.update('users/info', { 'name' => 'Oscar' }) => { 'name' => 'Oscar' }
+    # Write the data at path but does not delete ommited
+    # children. Returns the data
+    # Firebase.update('users/info',
+    # { 'name' => 'Oscar' }) => { 'name' => 'Oscar' }
     def update(path, data, query = {})
       request.execute(method: :patch, path: path,
                       data: data, query: query)
     end
+
+    # Aliasing methods to match usual Ruby/Rails http methods
+    alias post push
+    alias put set
+    alias destroy delete
   end
 end

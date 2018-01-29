@@ -24,11 +24,43 @@ describe "Firebase" do
     @firebase = Firebase::Client.new('https://test.firebaseio.com')
   end
 
-  describe "set" do
-    it "writes and returns the data" do
+  describe 'initialize request' do
+    it 'returns firebase request object' do
+      expect(@firebase.request).to be_a(Firebase::Request)
+    end
+
+    it 'returns nil auth' do
+      expect(@firebase.request.auth).to be nil
+    end
+
+    it 'returns string auth token' do
+      auth_firebase = Firebase::Client.new('https://test.firebaseio.com', 'fakefirebasetoken')
+      expect(auth_firebase.request.auth).to eq 'fakefirebasetoken'
+    end
+
+    it 'returns http_client object' do
+      expect(@firebase.request.http_client).to be_a HTTPClient
+    end
+
+    it 'returns default header' do
+      expect(@firebase.request.http_client.default_header).to eq({ 'Content-Type': 'application/json'})
+    end
+
+    it 'returns base_url' do
+      expect(@firebase.request.http_client.base_url).to eq 'https://test.firebaseio.com/'
+    end        
+  end
+
+  describe 'set' do
+    it 'writes and returns the data' do
       expect(@firebase.request).to receive(:execute).with(method: :put, path: 'users/info', data: data, query: {})
       @firebase.set('users/info', data)
     end
+
+    it 'writes and returns the data' do
+      expect(@firebase.request).to receive(:execute).with(method: :put, path: 'users/info', data: data, query: {})
+      @firebase.put('users/info', data)
+    end    
   end
 
   describe "get" do
@@ -102,18 +134,28 @@ describe "Firebase" do
     end
   end
 
-  describe "push" do
-    it "writes the data" do
+  describe 'push/post' do
+    it 'writes the data' do
       expect(@firebase.request).to receive(:execute).with(method: :post, path: 'users', data: data, query: {})
       @firebase.push('users', data)
     end
+
+    it 'writes the data' do
+      expect(@firebase.request).to receive(:execute).with(method: :post, path: 'users', data: data, query: {})
+      @firebase.post('users', data)
+    end    
   end
 
-  describe "delete" do
-    it "returns true" do
+  describe 'delete/destroy' do
+    it 'returns true' do
       expect(@firebase.request).to receive(:execute).with(method: :delete, path: 'users/info', query: {})
       @firebase.delete('users/info')
     end
+
+    it 'returns true' do
+      expect(@firebase.request).to receive(:execute).with(method: :delete, path: 'users/info', query: {})
+      @firebase.destroy('users/info')
+    end    
   end
 
   describe "update" do

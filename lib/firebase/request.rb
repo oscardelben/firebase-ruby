@@ -1,14 +1,17 @@
+# frozen_string_literal: true
+
 require 'uri'
 require 'httpclient'
 require 'googleauth'
 require 'json'
 
 module Firebase
+  # API requests to firebase API implemented here
   class Request
     attr_reader :http_client, :auth
 
     def initialize(uri:, auth:, headers: { 'Content-Type': 'application/json' })
-      raise ArgumentError.new('base_uri must be a valid https uri') if uri !~ URI::regexp(%w(https))
+      raise ArgumentError.new('base_uri must be a valid https uri') if uri !~ URI.regexp(%w(https))
       uri += '/' unless uri.end_with?('/')
 
       if valid_auth?(auth)
@@ -21,8 +24,8 @@ module Firebase
         @auth = auth
       end
 
-      @http_client = HTTPClient.new({ base_url: uri,
-                                      default_header: headers })
+      @http_client = HTTPClient.new(base_url: uri,
+                                    default_header: headers)
     end
 
     def execute(method:, path:, data: nil, query: {})
@@ -32,7 +35,8 @@ module Firebase
                  query: (@auth ? { auth: @auth }.merge(query) : query),
                  follow_redirect: true }
 
-      Firebase::Response.new(http_client.request(method, "#{path}.json", params))
+      http_call = http_client.request(method, "#{path}.json", params)
+      Firebase::Response.new(http_call)
     end
 
     private
