@@ -43,7 +43,7 @@ describe "Firebase" do
     end
 
     it 'returns default header' do
-      expect(@firebase.request.http_client.default_header).to eq({ 'Content-Type': 'application/json'})
+      expect(@firebase.request.http_client.default_header).to eq('Content-Type' => 'application/json')
     end
 
     it 'returns base_url' do
@@ -53,19 +53,19 @@ describe "Firebase" do
 
   describe 'set' do
     it 'writes and returns the data' do
-      expect(@firebase.request).to receive(:execute).with(method: :put, path: 'users/info', data: data, query: {})
+      expect(@firebase.request).to receive(:execute).with(:put, 'users/info', data, {})
       @firebase.set('users/info', data)
     end
 
     it 'writes and returns the data' do
-      expect(@firebase.request).to receive(:execute).with(method: :put, path: 'users/info', data: data, query: {})
+      expect(@firebase.request).to receive(:execute).with(:put, 'users/info', data, {})
       @firebase.put('users/info', data)
     end    
   end
 
   describe "get" do
     it "returns the data" do
-      expect(@firebase.request).to receive(:execute).with(method: :get, path: 'users/info', query: {})
+      expect(@firebase.request).to receive(:execute).with(:get, 'users/info', nil, {})
       @firebase.get('users/info')
     end
 
@@ -74,7 +74,7 @@ describe "Firebase" do
         :orderBy => '"$key"',
         :startAt => '"A1"'
       }
-      expect(@firebase.request).to receive(:execute).with(method: :get, path: 'users/info', query: params)
+      expect(@firebase.request).to receive(:execute).with(:get, 'users/info', nil, params)
       @firebase.get('users/info', params)
     end
 
@@ -136,31 +136,31 @@ describe "Firebase" do
 
   describe 'push/post' do
     it 'writes the data' do
-      expect(@firebase.request).to receive(:execute).with(method: :post, path: 'users', data: data, query: {})
+      expect(@firebase.request).to receive(:execute).with(:post, 'users', data, {})
       @firebase.push('users', data)
     end
 
     it 'writes the data' do
-      expect(@firebase.request).to receive(:execute).with(method: :post, path: 'users', data: data, query: {})
+      expect(@firebase.request).to receive(:execute).with(:post, 'users', data, {})
       @firebase.post('users', data)
     end    
   end
 
   describe 'delete/destroy' do
     it 'returns true' do
-      expect(@firebase.request).to receive(:execute).with(method: :delete, path: 'users/info', query: {})
+      expect(@firebase.request).to receive(:execute).with(:delete, 'users/info', nil, {})
       @firebase.delete('users/info')
     end
 
     it 'returns true' do
-      expect(@firebase.request).to receive(:execute).with(method: :delete, path: 'users/info', query: {})
+      expect(@firebase.request).to receive(:execute).with(:delete, 'users/info', nil, {})
       @firebase.destroy('users/info')
     end    
   end
 
   describe "update" do
     it "updates and returns the data" do
-      expect(@firebase.request).to receive(:execute).with(method: :patch, path: 'users/info', data: data, query: {})
+      expect(@firebase.request).to receive(:execute).with(:patch, 'users/info', data, {})
       @firebase.update('users/info', data)
     end
   end
@@ -198,7 +198,7 @@ describe "Firebase" do
     it "sets custom auth header" do
       client = Firebase::Client.new('https://test.firebaseio.com/', '{ "private_key": true }')
       
-      expect(client.request.http_client.default_header).to eql('Content-Type': 'application/json', authorization: 'Bearer 1')
+      expect(client.request.http_client.default_header).to eql('Content-Type' => 'application/json', authorization: 'Bearer 1')
     end
 
     it "handles token expiry" do
@@ -209,10 +209,9 @@ describe "Firebase" do
       
       client.get 'dummy'
 
-      expect(client.request.http_client.default_header).to eql({
-        'Content-Type': 'application/json',
-        authorization: 'Bearer 2'
-      })
+      expect(client.request.http_client.default_header).to eql(
+        'Content-Type' => 'application/json',
+        authorization: 'Bearer 2')
     end
   end
 end

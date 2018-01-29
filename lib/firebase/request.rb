@@ -10,7 +10,7 @@ module Firebase
   class Request
     attr_reader :http_client, :auth
 
-    def initialize(uri:, auth:, headers: { 'Content-Type': 'application/json' })
+    def initialize(uri, auth, headers = { 'Content-Type' => 'application/json' })
       raise ArgumentError.new('base_uri must be a valid https uri') if uri !~ URI.regexp(%w(https))
       uri += '/' unless uri.end_with?('/')
 
@@ -32,7 +32,7 @@ module Firebase
       end
     end
 
-    def execute(method:, path:, data: nil, query: {})
+    def execute(method, path, data = nil, query = {})
       raise ArgumentError.new("Invalid path: #{path}. Path must be relative") if path.start_with? '/'
 
       if @expires_at && Time.now > @expires_at

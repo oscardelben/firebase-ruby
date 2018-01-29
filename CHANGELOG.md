@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.3.8
-* Major version change as new class added handle request.
+* Major version change as new class added to handle request.
 * Classes separated in different files.
 * Syntax for Hashes changed from hashrockets to symbol.
 * Alias for request methods defined to match HTTP methods

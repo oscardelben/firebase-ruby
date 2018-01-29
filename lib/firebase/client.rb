@@ -6,34 +6,29 @@ module Firebase
     attr_reader :request
 
     def initialize(base_uri, auth = nil)
-      @request = Request.new(uri: base_uri,
-                             auth: auth)
+      @request = Request.new(base_uri, auth)
     end
 
     # Writes and returns the data
     # Firebase.set('users/info', { 'name' => 'Oscar' }) => { 'name' => 'Oscar' }
     def set(path, data, query = {})
-      request.execute(method: :put, path: path,
-                      data: data, query: query)
+      request.execute(:put, path, data, query)
     end
 
     # Returns the data at path
     def get(path, query = {})
-      request.execute(method: :get, path: path,
-                      query: query)
+      request.execute(:get, path, nil, query)
     end
 
     # Writes the data, returns the key name of the data added
     # Firebase.push('users', { 'age' => 18}) => {"name":"-INOQPH-aV_psbk3ZXEX"}
     def push(path, data, query = {})
-      request.execute(method: :post, path: path,
-                      data: data, query: query)
+      request.execute(:post, path, data, query)
     end
 
     # Deletes the data at path and returs true
     def delete(path, query = {})
-      request.execute(method: :delete, path: path,
-                      query: query)
+      request.execute(:delete, path, nil, query)
     end
 
     # Write the data at path but does not delete ommited
@@ -41,8 +36,7 @@ module Firebase
     # Firebase.update('users/info',
     # { 'name' => 'Oscar' }) => { 'name' => 'Oscar' }
     def update(path, data, query = {})
-      request.execute(method: :patch, path: path,
-                      data: data, query: query)
+      request.execute(:patch, path, data, query)
     end
 
     # Aliasing methods to match usual Ruby/Rails http methods
