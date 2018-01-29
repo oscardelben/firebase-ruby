@@ -24,16 +24,48 @@ describe "Firebase" do
     @firebase = Firebase::Client.new('https://test.firebaseio.com')
   end
 
-  describe "set" do
-    it "writes and returns the data" do
-      expect(@firebase).to receive(:process).with(:put, 'users/info', data, {})
+  describe 'initialize request' do
+    it 'returns firebase request object' do
+      expect(@firebase.request).to be_a(Firebase::Request)
+    end
+
+    it 'returns nil auth' do
+      expect(@firebase.request.auth).to be nil
+    end
+
+    it 'returns string auth token' do
+      auth_firebase = Firebase::Client.new('https://test.firebaseio.com', 'fakefirebasetoken')
+      expect(auth_firebase.request.auth).to eq 'fakefirebasetoken'
+    end
+
+    it 'returns http_client object' do
+      expect(@firebase.request.http_client).to be_a HTTPClient
+    end
+
+    it 'returns default header' do
+      expect(@firebase.request.http_client.default_header).to eq('Content-Type' => 'application/json')
+    end
+
+    it 'returns base_url' do
+      expect(@firebase.request.http_client.base_url).to eq 'https://test.firebaseio.com/'
+    end        
+  end
+
+  describe 'set' do
+    it 'writes and returns the data' do
+      expect(@firebase.request).to receive(:execute).with(:put, 'users/info', data, {})
       @firebase.set('users/info', data)
     end
+
+    it 'writes and returns the data' do
+      expect(@firebase.request).to receive(:execute).with(:put, 'users/info', data, {})
+      @firebase.put('users/info', data)
+    end    
   end
 
   describe "get" do
     it "returns the data" do
-      expect(@firebase).to receive(:process).with(:get, 'users/info', nil, {})
+      expect(@firebase.request).to receive(:execute).with(:get, 'users/info', nil, {})
       @firebase.get('users/info')
     end
 
@@ -42,7 +74,7 @@ describe "Firebase" do
         :orderBy => '"$key"',
         :startAt => '"A1"'
       }
-      expect(@firebase).to receive(:process).with(:get, 'users/info', nil, params)
+      expect(@firebase.request).to receive(:execute).with(:get, 'users/info', nil, params)
       @firebase.get('users/info', params)
     end
 
@@ -102,23 +134,33 @@ describe "Firebase" do
     end
   end
 
-  describe "push" do
-    it "writes the data" do
-      expect(@firebase).to receive(:process).with(:post, 'users', data, {})
+  describe 'push/post' do
+    it 'writes the data' do
+      expect(@firebase.request).to receive(:execute).with(:post, 'users', data, {})
       @firebase.push('users', data)
     end
+
+    it 'writes the data' do
+      expect(@firebase.request).to receive(:execute).with(:post, 'users', data, {})
+      @firebase.post('users', data)
+    end    
   end
 
-  describe "delete" do
-    it "returns true" do
-      expect(@firebase).to receive(:process).with(:delete, 'users/info', nil, {})
+  describe 'delete/destroy' do
+    it 'returns true' do
+      expect(@firebase.request).to receive(:execute).with(:delete, 'users/info', nil, {})
       @firebase.delete('users/info')
     end
+
+    it 'returns true' do
+      expect(@firebase.request).to receive(:execute).with(:delete, 'users/info', nil, {})
+      @firebase.destroy('users/info')
+    end    
   end
 
   describe "update" do
     it "updates and returns the data" do
-      expect(@firebase).to receive(:process).with(:patch, 'users/info', data, {})
+      expect(@firebase.request).to receive(:execute).with(:patch, 'users/info', data, {})
       @firebase.update('users/info', data)
     end
   end
@@ -126,11 +168,12 @@ describe "Firebase" do
   describe "http processing" do
     it "sends custom auth query" do
       firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
-      expect(firebase.request).to receive(:request).with(:get, "todos.json", {
+      expect(firebase.request.http_client).to receive(:request).with(:get, 'todos.json', {
         :body => nil,
         :query => {:auth => "secret", :foo => 'bar'},
         :follow_redirect => true
       })
+
       firebase.get('todos', :foo => 'bar')
     end
   end
@@ -154,10 +197,8 @@ describe "Firebase" do
 
     it "sets custom auth header" do
       client = Firebase::Client.new('https://test.firebaseio.com/', '{ "private_key": true }')
-      expect(client.request.default_header).to eql({
-        'Content-Type' => 'application/json',
-        :authorization => 'Bearer 1'
-      })
+      
+      expect(client.request.http_client.default_header).to eql('Content-Type' => 'application/json', authorization: 'Bearer 1')
     end
 
     it "handles token expiry" do
@@ -165,11 +206,12 @@ describe "Firebase" do
       client = Firebase::Client.new('https://test.firebaseio.com/', '{ "private_key": true }')
       allow(Time).to receive(:now) { current_time + 3600 }
       expect(@credentials).to receive(:refresh!)
+      
       client.get 'dummy'
-      expect(client.request.default_header).to eql({
+
+      expect(client.request.http_client.default_header).to eql(
         'Content-Type' => 'application/json',
-        :authorization => 'Bearer 2'
-      })
+        authorization: 'Bearer 2')
     end
   end
 end

@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module Firebase
+  # Firebase response class
   class Response
     attr_accessor :response
 
@@ -7,7 +10,7 @@ module Firebase
     end
 
     def body
-      JSON.parse(response.body, :quirks_mode => true)
+      JSON.parse(response.body, quirks_mode: true)
     end
 
     def raw_body

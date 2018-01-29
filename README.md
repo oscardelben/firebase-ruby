@@ -18,6 +18,10 @@ gem install firebase
 ```ruby
 base_uri = 'https://<your-firebase>.firebaseio.com/'
 
+firebase = Firebase::Database.new(base_uri)
+
+or
+
 firebase = Firebase::Client.new(base_uri)
 
 response = firebase.push("todos", { :name => 'Pick the milk', :'.priority' => 1 })
@@ -74,10 +78,20 @@ firebase.update('', {
 So far, supported methods are:
 
 ```ruby
-set(path, data, query_options)
 get(path, query_options)
+
+set(path, data, query_options)
+or
+put(path, data, query_options)
+
 push(path, data, query_options)
+or
+post(path, data, query_options)
+
 delete(path, query_options)
+or
+destroy(path, query_options)
+
 update(path, data, query_options)
 ```
 

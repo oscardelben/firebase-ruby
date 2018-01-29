@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Firebase
- VERSION = '0.2.8'.freeze
+ VERSION = '0.3.8'.freeze
 end

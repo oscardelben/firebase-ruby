@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.8
+* Major version change as new class added to handle request.
+* Classes separated in different files.
+* Syntax for Hashes changed from hashrockets to symbol.
+* Alias for request methods defined to match HTTP methods
+* New class Database defined so that other Firebase services can be added in future and make Client deprecated.
+* Rubocop fixes.
+
 ## 0.2.8
 
 * Fix [auth token expiration](https://github.com/oscardelben/firebase-ruby/pull/84) on longer lived Firebase objects.
