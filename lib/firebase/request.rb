@@ -14,22 +14,32 @@ module Firebase
       raise ArgumentError.new('base_uri must be a valid https uri') if uri !~ URI.regexp(%w(https))
       uri += '/' unless uri.end_with?('/')
 
+      @http_client = HTTPClient.new(base_url: uri,
+                                    default_header: headers)
+
       if valid_auth?(auth)
         # Using Admin SDK private key
-        scopes = %w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email)
-        credentials = Google::Auth::DefaultCredentials.make_creds(json_key_io: StringIO.new(auth), scope: scopes)
-        headers = credentials.apply(headers)
+        @credentials = Google::Auth::DefaultCredentials.make_creds(
+          json_key_io: StringIO.new(auth),
+          scope: %w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email)
+        )
+
+        @credentials.apply!(@http_client.default_header)
+        @expires_at = @credentials.issued_at + 0.95 * @credentials.expires_in
       else
         # Using deprecated Database Secret
         @auth = auth
       end
-
-      @http_client = HTTPClient.new(base_url: uri,
-                                    default_header: headers)
     end
 
     def execute(method:, path:, data: nil, query: {})
       raise ArgumentError.new("Invalid path: #{path}. Path must be relative") if path.start_with? '/'
+
+      if @expires_at && Time.now > @expires_at
+        @credentials.refresh!
+        @credentials.apply! http_client.default_header
+        @expires_at = @credentials.issued_at + 0.95 * @credentials.expires_in
+      end
 
       params = { body: (data && data.to_json),
                  query: (@auth ? { auth: @auth }.merge(query) : query),

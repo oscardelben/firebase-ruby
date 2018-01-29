@@ -176,22 +176,43 @@ describe "Firebase" do
 
       firebase.get('todos', :foo => 'bar')
     end
+  end
+
+  describe "service account auth" do
+    before do
+      credential_auth_count = 0
+      @credentials = double('credentials')
+      allow(@credentials).to receive(:apply!).with(instance_of(Hash)) do |arg|
+        credential_auth_count += 1
+        arg[:authorization] = "Bearer #{credential_auth_count}"
+      end
+      allow(@credentials).to receive(:issued_at) { Time.now }
+      allow(@credentials).to receive(:expires_in) { 3600 }
+
+      expect(Google::Auth::DefaultCredentials).to receive(:make_creds).with(
+        json_key_io: instance_of(StringIO),
+        scope: instance_of(Array)
+      ).and_return(@credentials)
+    end
 
     it "sets custom auth header" do
-      private_key = '{ "private_key": true }'
-      credentials = double()
-      expect(credentials).to receive(:apply).with({ 'Content-Type': 'application/json' }).and_return({ authorization: 'Bearer abcdef', 'Content-Type': 'application/json' })
-      expect(StringIO).to receive(:new).with(private_key).and_return('StringIO private key')
-      expect(Google::Auth::DefaultCredentials).to receive(:make_creds).with(json_key_io: 'StringIO private key', scope: instance_of(Array)).and_return(credentials)
-      expect(HTTPClient).to receive(:new).with({
-        base_url: 'https://test.firebaseio.com/',
-        default_header: {
-          authorization: 'Bearer abcdef',
-          'Content-Type': 'application/json'
-        }
-      })
+      client = Firebase::Client.new('https://test.firebaseio.com/', '{ "private_key": true }')
+      
+      expect(client.request.http_client.default_header).to eql('Content-Type': 'application/json', authorization: 'Bearer 1')
+    end
 
-      Firebase::Client.new('https://test.firebaseio.com/', private_key)
+    it "handles token expiry" do
+      current_time = Time.now
+      client = Firebase::Client.new('https://test.firebaseio.com/', '{ "private_key": true }')
+      allow(Time).to receive(:now) { current_time + 3600 }
+      expect(@credentials).to receive(:refresh!)
+      
+      client.get 'dummy'
+
+      expect(client.request.http_client.default_header).to eql({
+        'Content-Type': 'application/json',
+        authorization: 'Bearer 2'
+      })
     end
   end
 end
