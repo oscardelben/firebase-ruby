@@ -9,28 +9,35 @@ module Firebase
   class Client
     attr_reader :auth, :request
 
-    def initialize(base_uri, auth=nil)
+
+    # @param base_uri [type] [description]
+    # @param auth=nil Firebase Admin SDK private key (as string), or the legacy Firebase Database Secret
+    # @param use_legacy_database_secret set to true if the auth param is a legacy firebase database secret. otherwise leave nil or false
+    def initialize(base_uri, auth=nil, use_legacy_database_secret=nil)
       if base_uri !~ URI::regexp(%w(https))
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
-      base_uri += '/' unless base_uri.end_with?('/')
-      @request = HTTPClient.new({
-        :base_url => base_uri,
-        :default_header => {
-          'Content-Type' => 'application/json'
-        }
-      })
-      if auth && valid_json?(auth)
-        # Using Admin SDK service account
-        @credentials = Google::Auth::DefaultCredentials.make_creds(
-          json_key_io: StringIO.new(auth),
-          scope: %w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email)
-        )
-        @credentials.apply!(@request.default_header)
-        @expires_at = @credentials.issued_at + 0.95 * @credentials.expires_in
-      else
+      if auth && use_legacy_database_secret
         # Using deprecated Database Secret
         @secret = auth
+      else
+
+        base_uri += '/' unless base_uri.end_with?('/')
+        @request = HTTPClient.new({
+          :base_url => base_uri,
+          :default_header => {
+            'Content-Type' => 'application/json'
+          }
+        })
+        if auth && valid_json?(auth)
+          # Using Admin SDK service account
+          @credentials = Google::Auth::DefaultCredentials.make_creds(
+            json_key_io: StringIO.new(auth),
+            scope: %w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email)
+          )
+          @credentials.apply!(@request.default_header)
+          @expires_at = @credentials.issued_at + 0.95 * @credentials.expires_in
+        end
       end
     end
 
