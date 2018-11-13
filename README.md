@@ -1,7 +1,7 @@
 # firebase [![Build Status](https://travis-ci.org/oscardelben/firebase-ruby.svg?branch=master)](https://travis-ci.org/oscardelben/firebase-ruby) [![Gem Version](https://badge.fury.io/rb/firebase.svg)](https://rubygems.org/gems/firebase)
 
 
-Ruby wrapper for the [Firebase REST API](https://www.firebase.com/docs/rest/api/).
+Ruby wrapper for the [Firebase REST API](https://firebase.google.com/docs/reference/rest/database/).
 
 Changes are sent to all subscribed clients automatically, so you can
 update your clients **in realtime from the backend**.
