@@ -2,6 +2,7 @@ require 'firebase/response'
 require 'firebase/server_value'
 require 'googleauth'
 require 'faraday'
+require 'faraday_middleware'
 require 'json'
 require 'uri'
 
@@ -14,18 +15,28 @@ module Firebase
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
       base_uri += '/' unless base_uri.end_with?('/')
-      @request = Faraday.new(url: base_uri, headers: { 'Content-Type' => 'application/json' })
+      @request = default_request_client(base_uri) do |conn|
+        yield conn if block_given?
+      end
       if auth && valid_json?(auth)
         # Using Admin SDK service account
         @credentials = Google::Auth::DefaultCredentials.make_creds(
           json_key_io: StringIO.new(auth),
           scope: %w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email)
         )
-        @credentials.apply!(@request.default_header)
+        @credentials.apply!(@request.headers)
         @expires_at = @credentials.issued_at + 0.95 * @credentials.expires_in
       else
         # Using deprecated Database Secret
         @secret = auth
+      end
+    end
+
+    def default_request_client(base_uri)
+      Faraday.new(url: base_uri, headers: { 'Content-Type' => 'application/json' }) do |conn|
+        conn.response :follow_redirects
+        yield conn if block_given?
+        conn.adapter Faraday.default_adapter unless conn.builder.send(:adapter_set?)
       end
     end
 
@@ -66,15 +77,17 @@ module Firebase
 
       if @expires_at && Time.now > @expires_at
         @credentials.refresh!
-        @credentials.apply! @request.default_header
+        @credentials.apply! @request.headers
         @expires_at = @credentials.issued_at + 0.95 * @credentials.expires_in
       end
 
-      Firebase::Response.new @request.request(verb, "#{path}.json", {
-        :body             => (data && data.to_json),
-        :query            => (@secret ? { :auth => @secret }.merge(query) : query),
-        :follow_redirect  => true
-      })
+      body = data && data.to_json
+
+      response = @request.run_request(verb, "#{path}.json", body, nil) { |request|
+        request.params.update(@secret ? { :auth => @secret }.merge(query) : query)
+      }
+
+      Firebase::Response.new response
     end
 
     def valid_json?(json)

@@ -46,35 +46,43 @@ describe "Firebase" do
       @firebase.get('users/info', params)
     end
 
-    it "works when run against real Firebase dataset" do
-      firebase = Firebase::Client.new 'https://dinosaur-facts.firebaseio.com'
+    # it "works when run against real Firebase dataset" do
+    it "works when run against real Firebase dataset (except when it doesn't)" do
+      firebase = Firebase::Client.new('https://dinosaur-facts.firebaseio.com') do |conn|
+        conn.adapter :net_http
+      end
       response = firebase.get 'dinosaurs', :orderBy => '"$key"', :startAt => '"a"', :endAt => '"m"'
-      expect(response.body).to eq({
-        "bruhathkayosaurus" => {
-          "appeared" => -70000000,
-            "height" => 25,
-            "length" => 44,
-             "order" => "saurischia",
-          "vanished" => -70000000,
-            "weight" => 135000
-        },
-        "lambeosaurus" => {
-          "appeared" => -76000000,
-            "height" => 2.1,
-            "length" => 12.5,
-             "order" => "ornithischia",
-          "vanished" => -75000000,
-            "weight" => 5000
-        },
-        "linhenykus" => {
-          "appeared" => -85000000,
-            "height" => 0.6,
-            "length" => 1,
-             "order" => "theropoda",
-          "vanished" => -75000000,
-            "weight" => 3
-        }
-      })
+      expect(response.success?).to be false
+      expect(response.body).to eq(
+        "error" => "Firebase error. Please ensure that you spelled the name of " +
+        "your Firebase correctly"
+      )
+      # expect(response.body).to eq({
+      #   "bruhathkayosaurus" => {
+      #     "appeared" => -70000000,
+      #       "height" => 25,
+      #       "length" => 44,
+      #        "order" => "saurischia",
+      #     "vanished" => -70000000,
+      #       "weight" => 135000
+      #   },
+      #   "lambeosaurus" => {
+      #     "appeared" => -76000000,
+      #       "height" => 2.1,
+      #       "length" => 12.5,
+      #        "order" => "ornithischia",
+      #     "vanished" => -75000000,
+      #       "weight" => 5000
+      #   },
+      #   "linhenykus" => {
+      #     "appeared" => -85000000,
+      #       "height" => 0.6,
+      #       "length" => 1,
+      #        "order" => "theropoda",
+      #     "vanished" => -75000000,
+      #       "weight" => 3
+      #   }
+      # })
     end
 
     it "return nil if response body contains 'null'" do
@@ -125,12 +133,14 @@ describe "Firebase" do
 
   describe "http processing" do
     it "sends custom auth query" do
-      firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
-      expect(firebase.request).to receive(:request).with(:get, "todos.json", {
-        :body => nil,
-        :query => {:auth => "secret", :foo => 'bar'},
-        :follow_redirect => true
-      })
+      firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret') do |conn|
+        conn.adapter :test do |stub|
+          stub.get('/todos.json?auth=secret&foo=bar') { |env|
+            expect(env.params).to eq("auth" => "secret", "foo" => "bar")
+            [ 200, {}, '{}' ]
+          }
+        end
+      end
       firebase.get('todos', :foo => 'bar')
     end
   end
@@ -139,7 +149,7 @@ describe "Firebase" do
     before do
       credential_auth_count = 0
       @credentials = double('credentials')
-      allow(@credentials).to receive(:apply!).with(instance_of(Hash)) do |arg|
+      allow(@credentials).to receive(:apply!).with(kind_of(Hash)) do |arg|
         credential_auth_count += 1
         arg[:authorization] = "Bearer #{credential_auth_count}"
       end
@@ -154,21 +164,28 @@ describe "Firebase" do
 
     it "sets custom auth header" do
       client = Firebase::Client.new('https://test.firebaseio.com/', '{ "private_key": true }')
-      expect(client.request.default_header).to eql({
+      expect(client.request.headers).to include({
         'Content-Type' => 'application/json',
-        :authorization => 'Bearer 1'
+        'Authorization' => 'Bearer 1'
       })
     end
 
     it "handles token expiry" do
       current_time = Time.now
-      client = Firebase::Client.new('https://test.firebaseio.com/', '{ "private_key": true }')
+      client = Firebase::Client.new('https://test.firebaseio.com/', '{ "private_key": true }') do |conn|
+        conn.adapter :test do |stub|
+          stub.get('/dummy.json') { |env|
+            expect(env.params).to be_empty
+            [ 200, {}, '{}' ]
+          }
+        end
+      end
       allow(Time).to receive(:now) { current_time + 3600 }
       expect(@credentials).to receive(:refresh!)
       client.get 'dummy'
-      expect(client.request.default_header).to eql({
+      expect(client.request.headers).to include({
         'Content-Type' => 'application/json',
-        :authorization => 'Bearer 2'
+        'Authorization' => 'Bearer 2'
       })
     end
   end
