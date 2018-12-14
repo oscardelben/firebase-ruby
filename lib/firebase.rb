@@ -1,7 +1,7 @@
 require 'firebase/response'
 require 'firebase/server_value'
 require 'googleauth'
-require 'httpclient'
+require 'faraday'
 require 'json'
 require 'uri'
 
@@ -14,12 +14,7 @@ module Firebase
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
       base_uri += '/' unless base_uri.end_with?('/')
-      @request = HTTPClient.new({
-        :base_url => base_uri,
-        :default_header => {
-          'Content-Type' => 'application/json'
-        }
-      })
+      @request = Faraday.new(url: base_uri, headers: { 'Content-Type' => 'application/json' })
       if auth && valid_json?(auth)
         # Using Admin SDK service account
         @credentials = Google::Auth::DefaultCredentials.make_creds(
