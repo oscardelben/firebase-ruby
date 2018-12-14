@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.8.1 (faraday)
+
+* Switch to `faraday` client from `HTTPClient` because HTTPclient does not support https proxies.
+
 ## 0.2.8
 
 * Fix [auth token expiration](https://github.com/oscardelben/firebase-ruby/pull/84) on longer lived Firebase objects.
