@@ -16,6 +16,8 @@ gem install firebase
 ## Usage
 
 ```ruby
+require 'firebase'
+
 base_uri = 'https://<your-firebase>.firebaseio.com/'
 
 firebase = Firebase::Client.new(base_uri)
