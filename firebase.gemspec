@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
     "lib/firebase/server_value.rb",
     "lib/firebase/version.rb"
   ]
-  s.homepage = "http://github.com/oscardelben/firebase-ruby"
+  s.homepage = "https://github.com/oscardelben/firebase-ruby"
   s.licenses = ["MIT"]
   s.summary = "Firebase wrapper for Ruby"
 
