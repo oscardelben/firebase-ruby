@@ -46,37 +46,6 @@ describe "Firebase" do
       @firebase.get('users/info', params)
     end
 
-    it "works when run against real Firebase dataset" do
-      firebase = Firebase::Client.new 'https://dinosaur-facts.firebaseio.com'
-      response = firebase.get 'dinosaurs', :orderBy => '"$key"', :startAt => '"a"', :endAt => '"m"'
-      expect(response.body).to eq({
-        "bruhathkayosaurus" => {
-          "appeared" => -70000000,
-            "height" => 25,
-            "length" => 44,
-             "order" => "saurischia",
-          "vanished" => -70000000,
-            "weight" => 135000
-        },
-        "lambeosaurus" => {
-          "appeared" => -76000000,
-            "height" => 2.1,
-            "length" => 12.5,
-             "order" => "ornithischia",
-          "vanished" => -75000000,
-            "weight" => 5000
-        },
-        "linhenykus" => {
-          "appeared" => -85000000,
-            "height" => 0.6,
-            "length" => 1,
-             "order" => "theropoda",
-          "vanished" => -75000000,
-            "weight" => 3
-        }
-      })
-    end
-
     it "return nil if response body contains 'null'" do
       mock_response = double(:body => 'null')
       response = Firebase::Response.new(mock_response)
