@@ -1,5 +1,5 @@
 module Firebase
   class ServerValue
-    TIMESTAMP = { ".sv" => 'timestamp' } 
+    TIMESTAMP = { '.sv' => 'timestamp' }.freeze
   end
 end
