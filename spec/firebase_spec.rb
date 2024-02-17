@@ -141,4 +141,14 @@ describe "Firebase" do
       })
     end
   end
+
+  describe "server values" do
+    let (:increment) do
+      {'.sv' => { 'increment' => 1 } }
+    end
+    it "should increment" do
+      expect(@firebase).to receive(:process).with(:put, 'users/info', increment, {})
+      @firebase.set('users/info', Firebase::ServerValue.increment(1))
+    end
+  end
 end
