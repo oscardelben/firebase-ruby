@@ -96,7 +96,7 @@ describe "Firebase" do
     it "sends custom auth query" do
       firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
       expect(firebase.request).to receive(:request).with(:get, "todos.json", {
-        :body => nil,
+        :body => "null",
         :query => {:auth => "secret", :foo => 'bar'},
         :follow_redirect => true
       })
